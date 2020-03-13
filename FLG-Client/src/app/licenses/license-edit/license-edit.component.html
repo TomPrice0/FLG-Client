@@ -1,0 +1,300 @@
+<div class="col-md-10 offset-md-1">
+        <form *ngIf="license" class="col-md-12 col-sm-12" autocomplete="off" #licForm="ngForm" id='licForm'>
+            <div class="row">
+                <div class="form-group col-md-12" >
+                    <label for="licTitle">License Title</label>
+                    <input type="text" class="form-control" #licTitle="ngModel" required minlength="5" maxlength="75"
+                        [(ngModel)]="license.licTitle" name="licTitle"  
+                        [ngClass]="{'is-invalid': licTitle.errors && licTitle.touched }"> 
+                    <div style="color:red">
+                        <div *ngIf="licTitle.errors?.maxlength || licTitle.errors?.minlength"><small>Valid length between 5 and 75</small></div>
+                        <div *ngIf="licTitle.errors?.required && (licTitle.dirty || licTitle.touched)"><small>Required</small></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row" *ngIf="auth.isBlncAdmin || auth.isLeadAdmin">
+                <div class="form-group col-md-12">
+                    <label>Admin Notes</label>
+                    <textarea type="text" class="form-control" rows="3" name="adminNotes" [(ngModel)]="license.adminNotes"></textarea>
+                </div>
+            </div>
+            <div class="row">               
+                <div *ngIf="authorities" class="form-group col-md-12">
+                    <div class="form-group">
+                        <label>Authority</label>
+                        <input type="text" required class="form-control" name="department" #department="ngModel" placeholder="Select authority"
+                            (focus)="authorityBoxIn();$event.target.select();"
+                            (keydown)="resetAuthid($event)"
+                            (input)="validateName()"
+                            [disabled]="authorities.length==1"
+                            [ngClass]="{'is-invalid' : !isAllowedName && (department.touched || department.dirty)}"
+                            [(ngModel)]="license.department">
+                        <div *ngIf="showDepartmentSearchBox" style="max-height:150px; overflow: auto;"> 
+                            <div *ngFor="let a of authorities"><a *ngIf="filterAuthority(a.name)" href="#" (click)="setAuthid(a.id)" [innerHTML]="a.name | highlight: license.department"></a></div>                                
+                        </div>
+                        <span style="color:red" *ngIf="department.errors?.required && (department.touched || department.dirty)"><small>Required</small></span>                   
+                        <span style="color:red" *ngIf="!department.errors?.required && !isAllowedName && (department.touched || department.dirty)"><small>New authority not allowed.</small></span>
+                     </div>                     
+                </div>
+            </div>
+            <div class="row" *ngIf="license.licAuthId && (auth.isBlncAdmin || auth.isLeadAdmin)">
+                <label class="col-lg-1 col-md-2">Contact</label>
+                <div class="col-md-4">
+                    <span *ngIf="license.contact"><a [routerLink]="['/authority',license.licAuthId,'edit']"><i class="fa fa-user"></i>&nbsp;{{license.contact}}</a><br></span>
+                    <span *ngIf="license.authPhone"><a href="tel: 1-{{license.authPhone}}p{{license.authExt}}"><i class="fa fa-phone"></i>&nbsp;
+                            {{license.authPhone.substr(0,3)}}-{{license.authPhone.substr(3,3)}}-{{license.authPhone.substr(6,4)}}
+                            {{license.authExt?.length>0?('&nbsp;&nbsp;Ext: '+license.authExt):''}}</a><br></span>
+                    <span *ngIf="license.authEmail"><a href="mailto:{{license.authEmail}}" target="_top"><i class="fa fa-envelope"></i>&nbsp;{{license.authEmail}}</a><br></span>
+                    <span *ngIf="license.url"><a href="{{license.url}}" target="_blank"><i class="fa fa-globe"></i>&nbsp;{{license.url}}</a></span>
+                </div>
+                <label class="col-lg-1 col-md-2">Coordinator</label>
+                <div class="col-md-4">
+                    <a [routerLink]="['/user',license.coordId,'edit']"><i class="fa fa-user"></i>&nbsp;{{license.coordName}}</a><br>
+                    <a href="tel: 1-{{license.coordPhone}}p{{license.coordExt}}"><i class="fa fa-phone"></i>&nbsp;
+                        {{license.coordPhone.substr(0,3)}}-{{license.coordPhone.substr(3,3)}}-{{license.coordPhone.substr(6,4)}}
+                        {{license.coordExt && (license.coordExt.length>0)?('&nbsp;&nbsp;Ext: '+license.coordExt):''}}</a><br>
+                    <a href="mailto:{{license.coordEmail}}" target="_top"><i class="fa fa-envelope"></i>&nbsp;{{license.coordEmail}}</a>
+                </div>
+            </div>        
+
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label for="licDesc">License Description: </label>
+                    <textarea type="text" class="form-control" required rows="3" 
+                        [(ngModel)]="license.licDesc" name="licDesc" #licDesc="ngModel"
+                        [ngClass]="{'is-invalid': licDesc.errors && licDesc.touched }"></textarea>
+                    <div style="color:red">
+                        <div *ngIf="licDesc.errors?.required && (licDesc.dirty || licDesc.touched)"><small>Required</small></div>
+                    </div>
+                </div>
+            </div>            
+ 
+            <div class="row" *ngIf="auth.isLeadAdmin || auth.isBlncAdmin">
+                <div class="form-group col-md-12">
+                    <label for="keywords">Keywords: </label>
+                    <tag-input name="tagList" [(ngModel)]="license.tagList">
+                    </tag-input>
+                </div>  
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label for="duration">Duration: </label>
+                    <input required type="text" maxlength="50" class="form-control"
+                        [(ngModel)]="license.duration" name="duration" #duration="ngModel"
+                        [ngClass]="{'is-invalid': duration.errors && duration.touched }">
+                    <div style="color:red">
+                        <div *ngIf="duration.errors?.maxlength"><small>Valid length between 1 and 50</small></div>
+                        <div *ngIf="duration.errors?.required && duration.touched"><small>Required</small></div>
+                    </div>    
+                </div>
+                <div *ngFor="let f of enumFields" class="form-group col-md-4">
+                    <div *ngIf="!auth.isCoordinator || f.name!=='types'">
+                        <label for="{{f.col}}">{{f.label}}</label>
+                        <select *ngIf="enum" class="form-control" [(ngModel)]="license[f.col]" name={{f.col}}>                            
+                            <option value=null>{{f.sel}}</option>
+                            <option *ngFor="let e of filterEnum(f.name)" value='{{e.key}}'>{{e.value}}</option>
+                        </select>
+                    </div>   
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="otherReq">Other Requirements: </label>
+                    <textarea type="text" class="form-control" rows="3" [(ngModel)]="license.otherReq" name="otherReq"></textarea>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="exemptions">Exemptions: </label>
+                    <textarea type="text" class="form-control" rows="3" [(ngModel)]="license.exemptions" name="exemptions"></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label for="appTitle">Application Title: </label>
+                    <input type="text" class="form-control" #appTitle="ngModel"
+                    [(ngModel)]="license.appTitle" name="appTitle">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="appNum">Application Number/ID: </label>
+                    <input type="text" ngmaxlength="50" class="form-control" #appNum="ngModel" 
+                    [(ngModel)]="license.appNum" name="appNum" 
+                    [ngClass]="{'is-invalid': appNum.errors && appNum.touched }">
+                    <div style="color:red">
+                      <div *ngIf="appNum.errors?.maxlength"><small>Valid length between 1 and 50</small></div>
+                    </div>    
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="appURL">Application URL: </label>
+                    <div class="input-group">
+                       <input type="text" ngmaxlength="200" class="form-control" #appURL="ngModel"
+                        [(ngModel)]="license.appURL" name="appURL" placeholder="www.website.gov" 
+                        [ngClass]="{'is-invalid': appURL.errors && appURL.touched }">
+                        <span class="input-group-btn input-group-addon ">
+                            <button class="btn btn-primary btn-ncb-wide"
+                                [disabled]="!!license.appURL && license.appURL.length==0"
+                                (click)="v.testLink(license.appURL)">Test</button>
+                        </span>
+                     <div style="color:red">
+                        <div *ngIf="appURL.errors?.maxlength"><small>Valid length between 1 and 200</small></div>                        
+                    </div>
+                   </div>    
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-2">
+                    <label for="licNum">Licenses Issued in FY {{issuedYr}}: </label>
+                    <span class="input-group">
+                        <input type="number" class="form-control" #licNum="ngModel"
+                        [(ngModel)]="license.licNum" name="licNum" style="text-align: left" maxlength="6"
+                        [ngClass]="{'is-invalid': licNum.errors && licNum.touched && auth.isCoordinator }"  />
+                    </span>
+                    <div style="color:red">
+                        <div *ngIf="!licNum.errors && licNum.touched && auth.isCoordinator">
+                            Required.
+                        </div>
+                    </div>    
+                </div>
+                <div class="form-group col-md-5">
+                    <label for="licenseURL"><br>License website: </label>
+                    <span class="input-group">
+                        <input required maxlength="200" type="text" class="form-control input-group" #licenseURL="ngModel"
+                        [(ngModel)]="license.licenseURL" type="url" name="licenseURL" placeholder="www.website.gov"
+                        [ngClass]="{'is-invalid': licenseURL.errors && licenseURL.touched }" >
+                        <span class="input-group-btn input-group-addon ">
+                            <button class="btn btn-primary btn-ncb-wide input-group-addon"
+                                [disabled]="!!license.licenseURL && license.licenseURL.length==0"
+                                (click)="v.testLink(license.licenseURL)">Test</button>
+                        </span>
+                    </span>
+                    <div style="color:red">
+                        <div *ngIf="licenseURL.errors?.maxlength"><small>Valid length between 1 and 200</small></div>
+                        <div *ngIf="licenseURL.errors?.required && licenseURL.touched"><small>Required</small></div>
+                    </div>        
+                </div>
+                <div class="form-group col-md-5">
+                    <label for="authority"><br>Authorizing statute:</label>
+                    <input required type="text" class="form-control" #authority="ngModel"
+                    [(ngModel)]="license.authority" name="authority" 
+                    [ngClass]="{'is-invalid': authority.errors && authority.touched }" >
+                    <div style="color:red">
+                        <div *ngIf="authority.errors?.required && authority.touched"><small>Required</small></div>
+                    </div>    
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label>Application Fee:</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                        </div>
+                        <input type="number" class="form-control" [(ngModel)]="license.applicationFee" name="applicationFee" #applicationFee="ngModel" 
+                            placeholder="Whole Dollars" style="text-align: left" maxlength="6">
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>New License Fee:</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                        </div>
+                        <input required type="number" class="form-control" [(ngModel)]="license.newLicFee" name="newLicFee" 
+                        placeholder="Whole Dollars" style="text-align: left" maxlength="6" #newLicFee="ngModel"
+                        [ngClass]="{'is-invalid': newLicFee.errors?.required && newLicFee.touched }" >
+                    </div>
+                    <div style="color:red">
+                        <div *ngIf="newLicFee.errors?.required && newLicFee.touched"><small>Required</small></div>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Renewal Fee:</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                        </div>
+                        <input type="number" class="form-control" [(ngModel)]="license.renewalFee" name="renewalFee" placeholder="Whole Dollars" style="text-align: left" maxlength="6">
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Miscellaneous Fee:</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                        </div>
+                        <input type="number" class="form-control" [(ngModel)]="license.miscFee" name="miscFee" placeholder="Whole Dollars" style="text-align: left" maxlength="6">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="auth.isLeadAdmin">
+                <div class="col-md-12">
+                    <label>Occupation</label>
+                    <input class="form-control" placeholder="Type soccode or title" name="socSearchTerms" [(ngModel)]="socSearchTerms" (focus)="showSocSearchBox=true;$event.target.select()">
+                    <div *ngIf="socSearchTerms && socSearchTerms.length>0 && showSocSearchBox" >
+                        <div style="height:150px; overflow: auto;"> 
+                            <div *ngFor="let soccode of soccodes"><a [routerLink]='' *ngIf="filterSocResults(soccode)" (click)="setSoccode(soccode.socCode)" [innerHTML]="soccode.socCode+' '+soccode.socTitle | highlight: socSearchTerms"></a></div>
+                        </div>
+                    </div>
+                 </div>
+                <div class="col-md-10" style="margin-left: 10px;"  *ngIf="license.socCode">                    
+                    {{license.socDesc}}
+                </div>
+            </div>
+            <p></p>
+            <div class="row">
+                <div class="form-group col-md-9" height="200px;">
+                    <label>Reciprocity</label>
+                    <tag-input name="recipStates" [(ngModel)]="license.recipStates" [onlyFromAutocomplete]="true"
+                        secondaryPlaceholder="Enter state abbrev" placeholder=" +State abbrev" [identifyBy]="'id'" [displayBy]="'value'">
+                        <tag-input-dropdown [autocompleteItems]="states" [keepOpen]="true">
+                        </tag-input-dropdown>
+                    </tag-input>                    
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Reciprocity Fee</label>
+                    <div class="input-group">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <input type="number" class="form-control" name="ricipFee" [(ngModel)]="license.ricipFee" placeholder="Whole Dollars" style="text-align: left">
+                        </div>
+                    </div>
+                </div>
+             </div>
+            <div class="row">
+                <div class="form-group col-md-2">
+                    <label>Request transfer</label>
+                    <input type="checkbox" class="checkBox form-control" [(ngModel)]="license.markForAuthXfer" name="markForAuthXfer"/>
+                </div>
+                <div class="form-group col-md-10">
+                    <label>Business Coordinator Notes</label>
+                    <textarea type="text" class="form-control" rows="3" name="busCoordNotes" [(ngModel)]="license.busCoordNotes"></textarea>
+                </div>
+            </div>
+            <div class="navbar fixed-bottom">
+                <div *ngIf="license.id!==0"> 
+                    <a [routerLink]="['/license',licList[0],'edit']">
+                            <button class="btn btn-primary btn-ncb-wide" [disabled]="licListPtr===0"><i class="fa fas fa-angle-double-left"></i></button></a>&nbsp;                    
+                    <a [routerLink]="['/license',licList[math.max(licListPtr-1,0)],'edit']">
+                            <button class="btn btn-primary btn-ncb-wide" [disabled]="licListPtr===0"><i class="fa fas fa-angle-left"></i></button></a>&nbsp;                   
+                    {{licListPtr+1}} of {{licList.length}}&nbsp; 
+                    <a [routerLink]="['/license',licList[math.min(licListPtr+1,licList.length-1)],'edit']">
+                            <button class="btn btn-primary btn-ncb-wide" [disabled]="licListPtr===licList.length-1"><i class="fa fas fa-angle-right"></i></button></a>&nbsp;                    
+                    <a [routerLink]="['/license',licList[licList.length-1],'edit']">
+                            <button class="btn btn-primary btn-ncb-wide" [disabled]="licListPtr===licList.length-1"><i class="fa fas fa-angle-double-right"></i></button></a>&nbsp;
+                </div>
+                <div class="ml-auto">
+                    <button type="submit" [disabled]="!isDirty" (click)="update();" 
+                        class="btn btn-primary btn-ncb-wide">{{license?.id===0?"Add":"Update" }}                        
+                    </button>&nbsp;
+                        <button class="btn btn-outline-secondary" (click)="goBack();">Cancel</button>&nbsp;&nbsp;
+                </div>               
+            </div>
+        </form>
+    </div>

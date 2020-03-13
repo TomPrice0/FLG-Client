@@ -1,0 +1,58 @@
+<div class="col-md-10 offset-md-1">
+    <div *ngIf="this.authName">
+        <h6>All licenses for {{this.authName}}</h6>
+    </div>
+    <div *ngIf="this.coordName">
+        <h6>All licenses for {{this.coordName}}</h6>
+    </div>
+    <p></p>
+    <div class="input-group">
+        <div *ngIf="auth.isLoggedIn && this.enums"><b>Status: </b>
+            <select [(ngModel)]="filterActive" style="height: 38px; margin-right:10px;">                            
+                <option value=''>All</option>
+                <option *ngFor="let e of filterEnum('active')" value='{{e.key}}'>{{e.value}}</option>                
+                <option *ngIf="!auth.isCoordinator" value='o'>Occupation needed</option>
+                <option *ngIf="!auth.isCoordinator" value='t'>License type needed</option>
+                <option value='n'>Licenses issued needed</option>
+                <option value='x'>Transfer request</option>
+                <option value='z'>Any flag</option> 
+            </select>   
+        </div>
+        <input type="text" class="form-control" placeholder="Type license name" [(ngModel)]="searchTerms">
+        <div *ngIf="auth.isLoggedIn" class="pull-right">&nbsp;
+            <button class="btn btn-primary btn-ncb-wide" [routerLink]="['/license/0/edit']">New License</button>
+        </div>
+    </div>
+    <p><p></p>
+    <div style="margin-bottom:70px;" class="tableFixHead">
+        <table>
+            <thead *ngIf="auth.isLoggedIn">
+                <th *ngFor="let col of cols"><a (click)="lh.setOrder(col.name);">
+                    <span><i *ngIf="lh.listOrder==col.name" [className]="lh.orderDesc?'fa fa-sort-alpha-desc':'fa fa-sort-alpha-asc'"></i></span>
+                    {{col.label}}</a>&nbsp;</th>
+            </thead>    
+            <tbody *ngFor="let license of licenses">
+                <tr *ngIf="filterResults(license)">
+                    <td>
+                        <a [routerLink]="auth.isLoggedIn? ['/license',license.id,'edit'] :  ['/license',license.id]" 
+                        [innerHTML]="license.licTitle | highlight: this.searchTerms"></a>
+                    </td>
+                    <td *ngIf="auth.isLoggedIn">
+                        {{license.licenseUpdated | date: 'MM/dd/yy h:mm a'}}
+                    </td>
+                    <td *ngIf="auth.isLoggedIn">
+                        <span *ngIf="enums && license.activeStatus && license.activeStatus>0">
+                            <span [style.color]="getStatusIcon(license.activeStatus).color" 
+                                title="{{getEnumVal('active',license.activeStatus)}}" 
+                                [className]="'fa fa-'+getStatusIcon(license.activeStatus).icon">&nbsp;
+                            </span>
+                        </span>
+                        <span *ngFor="let l of flagLabels(license.flags)">
+                            <span [style.color]="l.color" title="{{l.tip}}" [className]="'fa fa-'+l.icon">&nbsp;</span>
+                            </span>
+                    </td>               
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>   

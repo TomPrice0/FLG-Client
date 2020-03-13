@@ -1,0 +1,213 @@
+    
+            <form *ngIf="authority" class="col-md-10 col-sm-10 offset-md-1" autocomplete="off" #authForm="ngForm">         
+                <h4>{{authority.id!==0? "All information entered on this page should reflect the agency issuing the licenses.":
+                    "All information entered on this page should reflect the direct license issuing division within an agency/board or commission."}}</h4>
+                <br />
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <label>Department</label>
+                            <input type="text" class="form-control" style="width:80%" name="department" #department="ngModel"
+                                (focus)="departmentBoxIn();$event.target.select()"
+                                (input)="validateName()"
+                                [ngClass]="{'is-invalid' : !isAllowedDepartment && (department.touched || department.dirty)}"
+                                [(ngModel)]="authority.department">
+                            <div *ngIf="this.authorities && showDepartmentSearchBox" style="max-height:150px; overflow: auto;"> 
+                                <div *ngFor="let a of getDepartment() | unique"><a *ngIf="filterDepartmentResults(a)" href="#" (click)="selectDepartment(a)" [innerHTML]="a | highlight: authority.department"></a></div>                                
+                            </div>
+                            <div style="color:red">    
+                                <div *ngIf="!isAllowedDepartment && (department.touched || department.dirty)"><small>New department not allowed.</small></div>
+                            </div>      
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <label>Division</label>
+                            <input type="text" class="form-control" style="width:80%" name="division" 
+                                (focus)="divisionBoxIn();$event.target.select()"
+                                (change)="validateName()"
+                                [(ngModel)]="authority.division">
+                            <div *ngIf="authority.department && showDivisionSearchBox" style="max-height:150px; overflow: auto;">
+                                <div *ngFor="let a of getDivision() | unique">
+                                    <span *ngIf="filterDivisionResults(a)">
+                                        <a href="#" (click)="selectDivision(a)" [innerHTML]="a | highlight: authority.division"></a>
+                                    </span>
+                                </div>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <label>Board</label>
+                            <input class="input-group-text" type="text" class="form-control"style="width:80%" name="board" autocomplete="off" #board="ngModel" 
+                            (input)="validateName()" (focus)="hideSearchBoxes()" [(ngModel)]="authority.board" #board="ngModel"
+                            [ngClass]="{'is-invalid' : !isAllowedBoard && (board.touched || board.dirty) }">
+                        <div style="color:red">    
+                                <div *ngIf="!isAllowedBoard && (board.touched || board.dirty) "><small>Previously used department/division/board.</small></div>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="!auth.isCoordinator && users && authority">
+                    <label class="col-md-2">Coordinator</label>
+                    <div class="form-group col-md-4">                        
+                        <input required type="text" class="form-control" style="width:100%" [(ngModel)]="searchCoordTerms" name="searchCoordTerms" #searchCoordTerms1="ngModel"
+                            (focus)="coordBoxIn();$event.target.select();"
+                            (keydown)="resetCoordId($event)"
+                            [ngClass]="{'is-invalid': !authority.coordId && searchCoordTerms1.touched }">
+                        <div *ngIf="showCoordSearchBox" style="max-height:150px; overflow: auto;"> 
+                            <div *ngFor="let c of users"><a *ngIf="filterCoordResults(c)" href="#" (click)="selectCoord(c.id)" [innerHTML]="c.name | highlight: searchCoordTerms"></a></div>
+                        </div>
+                        <div style="color:red">
+                            <div *ngIf="!authority.coordId && (searchCoordTerms1.touched || searchCoordTerms1.dirty) "><small>Required</small></div>
+                        </div>
+                        <br><a href="mailto:{{user?.email}}"><i class="fa fa-envelope">&nbsp;</i>{{user?.email}}</a>
+                        <br><i class="fa fa-phone"></i>&nbsp;{{user?.phone}} 
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input type="text" required ngmaxlength="75" class="form-control" style="width:100%" placeholder="Address" autocomplete="off" name="address1" #address1="ngModel"
+                                [(ngModel)]="authority.address1" (focus)="hideSearchBoxes()"
+                                [ngClass]="{'is-invalid': address1.errors && address1.touched }">
+                                <div style="color:red">
+                                    <div *ngIf="address1.errors?.maxlength"><small>Valid length between 1 and 75</small></div>
+                                    <div *ngIf="address1.errors?.required && address1.touched"><small>Required</small></div>
+                                </div>
+                            &nbsp;
+                            <input type="text" ngmaxlength="75" class="form-control" style="width:100%" placeholder="Additional address" autocomplete="off" name="address2" #address2="ngModel"
+                                [(ngModel)]="authority.address2" (focus)="hideSearchBoxes()"
+                                [ngClass]="{'is-invalid': address2.errors && address2.touched }">
+                                <div style="color:red">
+                                    <div *ngIf="address2.errors?.maxlength"><small>Valid length between 1 and 75</small></div>
+                                 </div>
+                            &nbsp;
+                            <div class="input-group">
+                                <input type="text" required ngmaxlength="30" class="form-control" style="width:200px" placeholder="City" autocomplete="off" name="city" #city="ngModel"
+                                    [(ngModel)]="authority.city" (focus)="hideSearchBoxes()"
+                                    [ngClass]="{'is-invalid': city.errors && city.touched }">&nbsp;&nbsp;&nbsp;
+                                <select style="width: 150px" type="text" class="form-control" name="st"
+                                    [(ngModel)]="authority.st" (focus)="hideSearchBoxes()">
+                                    <option *ngFor="let state of states" value="{{state.abbrev}}">{{state.stname}}</option>
+                                </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type="text" required ngmaxlength="5" class="form-control" style="width: 100px" placeholder="Zip" name="zip" #zip="ngModel"
+                                    [(ngModel)]="authority.zip" (focus)="hideSearchBoxes()"
+                                    [ngClass]="{'is-invalid': zip.errors && zip.touched }">&nbsp;-&nbsp;
+                                <input  type="text" ngmaxlength="4" class="form-control" style="width: 100px" placeholder="Ext" name="zipExt" #zipExt="ngModel"
+                                    [(ngModel)]="authority.zipExt" (focus)="hideSearchBoxes()"
+                                    [ngClass]="{'is-invalid': zipExt.errors && zipExt.touched }">
+                            </div>
+                            <div style="color:red">
+                                <div *ngIf="city.errors?.maxlength"><small>Valid length between 1 and 30</small></div>
+                                <div *ngIf="(city.errors?.required || zip.errors?.required) && (city.dirty || city.touched || zip.dirty || zip.touched)"><small>Required</small></div>
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <div class="input-group">
+                                <input style="width: 100px" type="text" class="form-control" placeholder="Phone" ngmaxlength="10" name="telephone" #telephone="ngModel"
+                                    [(ngModel)]="authority.telephone" (focus)="hideSearchBoxes()"
+                                    [ngClass]="{'is-invalid': telephone.errors && telephone.touched }">
+                                    &nbsp;&nbsp;&nbsp;
+                                <input style="width: 60px" type="text" class="form-control" placeholder="Ext" ngmaxlength="10" name="teleExt" #teleExt="ngModel"
+                                    [(ngModel)]="authority.teleExt" (focus)="hideSearchBoxes()"
+                                    [ngClass]="{'is-invalid': teleExt.errors && teleExt.touched }">
+                             </div>
+                        </div>
+                        <div style="color:red">
+                            <div *ngIf="telephone.errors?.maxlength || teleExt.errors?.maxlength"><small>Valid length between 1 and 10</small></div>
+                            <div *ngIf="telephone.errors?.required && (telephone.dirty || telephone.touched)"><small>Required</small></div>
+                        </div>
+                </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Fax</label><br>
+                            <input style="width: 150px" type="text" class="form-control" placeholder="Fax" maxlength="10" name="fax" #fax="ngModel"
+                                [(ngModel)]="authority.fax" (focus)="hideSearchBoxes()"
+                                [ngClass]="{'is-invalid': fax.errors && fax.touched }">
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom: 70px;">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Contact</label><br>
+                            <input  style="width: 100%" type="text" class="form-control" placeholder="Contact" name="contact" #contact="ngModel"
+                                [(ngModel)]="authority.contact" (focus)="hideSearchBoxes()"
+                                [ngClass]="{'is-invalid': contact.errors && contact.touched }">
+                        </div>
+                    </div>  
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Email</label><br>
+                            <input style="width: 100%" type="text" class="form-control" placeholder="Email" name="email" #email="ngModel"
+                                [(ngModel)]="authority.email" (focus)="hideSearchBoxes()"
+                                [ngClass]="{'is-invalid': email.errors && email.touched }">
+                        </div>
+                    </div>  
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><br>Web site</label>
+                            <div class="input-group">
+                                <span style="width: 80%">
+                                    <input type="text" class="form-control"  name="url" #url="ngModel"
+                                    [(ngModel)]="authority.url" placeholder="Url" (focus)="hideSearchBoxes()"
+                                    [ngClass]="{'is-invalid': url.errors && url.touched }">
+                                </span>
+                                <span class="input-group-btn input-group-addon " style="width:0">
+                                    <button class="btn btn-primary btn-ncb-wide"
+                                        [disabled]="!!authority.url && authority.url.length==0"
+                                        (click)="v.testLink(authority.url)">Test</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label><br>Office Hours</label>
+                            <input style="width: 100%" type="text" class="form-control" name="officeHours" #officeHours="ngModel"
+                            [(ngModel)]="authority.officeHours" (focus)="hideSearchBoxes()"
+                            [ngClass]="{'is-invalid': officeHours.errors && officeHours.touched }">
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <label>Multiple Locations</label>
+                            <input type="checkbox" class="checkBox" class="form-control" name="multipleLocation"
+                            [(ngModel)]="authority.multipleLocation" (focus)="hideSearchBoxes()" />
+                        </div>
+                    </div>
+                </div>
+ 
+                <div class="navbar fixed-bottom">
+                    <div *ngIf="!isAddMode">
+                        <a [routerLink]="['/authority',authList[0],'edit']">
+                            <button class="btn btn-primary btn-ncb-wide" [disabled]="authListPtr===0"><i class="fa fas fa-angle-double-left"></i></button></a>&nbsp;                    
+                        <a [routerLink]="['/authority',authList[math.max(authListPtr-1,0)],'edit']">
+                                <button class="btn btn-primary btn-ncb-wide" [disabled]="authListPtr===0"><i class="fa fas fa-angle-left"></i></button></a>&nbsp;                   
+                        {{authListPtr+1}} of {{authList.length}}&nbsp; 
+                        <a [routerLink]="['/authority',authList[math.min(authListPtr+1,authList.length-1)],'edit']">
+                                <button class="btn btn-primary btn-ncb-wide" [disabled]="authListPtr===authList.length-1"><i class="fa fas fa-angle-right"></i></button></a>&nbsp;                    
+                        <a [routerLink]="['/authority',authList[authList.length-1],'edit']">
+                                <button class="btn btn-primary btn-ncb-wide" [disabled]="authListPtr===authList.length-1"><i class="fa fas fa-angle-double-right"></i></button></a>&nbsp;
+                    </div>
+                    <div class="ml-auto"></div>           
+                    <button class="btn btn-primary btn-ncb-wide" [disabled]="!isDirty || !authority.coordId" (click)="update();">
+                        {{ authority.id===0?"Add":"Update" }}</button>
+                    &nbsp;
+                    <button *ngIf="!authority.haslicenses && authority.id!==0" class="btn btn-primary btn-ncb-wide" (click)="deleteAuth();">Delete</button>
+                    &nbsp;
+                    <button type="cancel" class="btn btn-outline-secondary btn-ncb-wide" (click)="goBack();">Cancel</button>
+                </div>                
+            </form>    

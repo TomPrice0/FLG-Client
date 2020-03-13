@@ -1,0 +1,49 @@
+<div class="col-md-10 offset-md-1">
+    <form *ngIf="resource" class="col-md-12 col-sm-12" autocomplete="off" #resForm="ngForm" id='resForm'>
+        <div class="row">
+            <div class="form-group col-md-12" >
+                <label for="title">Resource:</label>
+                <input type="text" class="form-control" #title="ngModel" required minlength="5" maxlength="75"
+                    [(ngModel)]="resource.title" name="title"  
+                    [ngClass]="{'is-invalid': title.errors && title.touched }"> 
+                <div style="color:red">
+                    <div *ngIf="title.errors?.maxlength || title.errors?.minlength"><small>Valid length between 5 and 75</small></div>
+                    <div *ngIf="title.errors?.required && (title.dirty || title.touched)"><small>Required</small></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label for="keywords">Keywords: </label>
+                <tag-input name="tagList" [(ngModel)]="resource.tagList">
+                </tag-input>
+            </div>  
+        </div>
+        <div class="row">
+            <div class="col-md-12 ql-toolbar ql-snow">
+                <quill-editor style="width:100%; height:50vh;" [(ngModel)]="resource.resource" name="restext"> 
+                </quill-editor>
+            </div>
+        </div>
+        <div class="navbar fixed-bottom">
+            <div *ngIf="initId!==0"> 
+                <a [routerLink]="['/resource',resList[0],'edit']">
+                        <button class="btn btn-primary btn-ncb-wide" [disabled]="resListPtr===0"><i class="fa fas fa-angle-double-left"></i></button></a>&nbsp;                    
+                <a [routerLink]="['/resource',resList[math.max(resListPtr-1,0)],'edit']">
+                        <button class="btn btn-primary btn-ncb-wide" [disabled]="resListPtr===0"><i class="fa fas fa-angle-left"></i></button></a>&nbsp;                   
+                {{resListPtr+1}} of {{resList.length}}&nbsp; 
+                <a [routerLink]="['/resource',resList[math.min(resListPtr+1,resList.length-1)],'edit']">
+                        <button class="btn btn-primary btn-ncb-wide" [disabled]="resListPtr===resList.length-1"><i class="fa fas fa-angle-right"></i></button></a>&nbsp;                    
+                <a [routerLink]="['/resource',resList[resList.length-1],'edit']">
+                        <button class="btn btn-primary btn-ncb-wide" [disabled]="resListPtr===resList.length-1"><i class="fa fas fa-angle-double-right"></i></button></a>&nbsp;
+            </div>
+            <div class="ml-auto">
+                <button type="submit" [disabled]="!isDirty" (click)="update();" 
+                    class="btn btn-primary btn-ncb-wide">{{resource.id===0?"Add":"Update" }}</button>&nbsp;
+                <button  *ngIf="resource.id!==0" [disabled]="isDirty" class="btn btn-primary btn-ncb-wide" (click)="delete()">Delete</button>&nbsp;
+                <button class="btn btn-outline-secondary btn-ncb-wide" (click)="goBack();">Cancel</button>&nbsp;&nbsp;
+            </div>               
+        </div>
+    </form>
+</div>
+

@@ -1,0 +1,136 @@
+<div *ngIf="license" class="col-md-10 offset-md-1" style="margin-bottom:70px;">
+    <div class="row well">
+        <h3>{{license.licTitle}}</h3>
+        <div class="form-group col-md-12 well">
+            <p>{{license.licDesc}}</p>
+        </div>
+    </div>
+    <div class="row NCBOLD-title">
+        <div class="col-md-12">
+            <h4 class="NCBOLD-blue">Other Information</h4>
+        </div>
+    </div>
+    <div class="row well">
+        <div class="form-group col-md-6">
+            <b>License Application</b>
+            <p><a [attr.href]="license.appURL" target="_blank" class="NCBOLD-link-bold" >{{license.appTitle}}</a></p>
+        </div>
+        <div class="form-group col-md-3">
+            <b>Duration of License</b>
+            <p>{{license.duration}}</p>
+        </div>
+        <div class="form-group col-md-3">
+            <b>Authority</b>
+            <p>{{license.authority}}</p>
+        </div>
+        <div class="col-md-6" *ngFor="let enum of getEnums()">
+            <b>{{enum.label}}</b> {{getEnumVal(enum.name, license[enum.col])}}
+        </div>
+    </div>
+    <p></p> 
+    <div class="page-break-inside-avoid">
+        <div class="row NCBOLD-title">
+            <h4 class="NCBOLD-blue col-md-12">Fees</h4>
+        </div>
+        <div class="row well" style="text-align: center;">
+            <div class="col-sm-2"><b>Application</b><br>${{license.applicationFee}}</div>
+            <div class="col-sm-2"><b>New License</b><br>${{license.newLicFee}}</div>
+            <div class="col-sm-2"><b>Renewal</b><br>${{license.renewalFee}}</div>
+            <div class="col-sm-2"><b>Reciprocity:</b><br>${{license.ricipFee}}</div>
+            <div class="col-sm-2"><b>Miscellaneous:</b><br>${{license.miscFee}}</div>
+        </div>
+    </div> <!-- End of printer by-pass -->
+    <p></p>
+    <div class="page-break-inside-avoid" *ngIf="license?.otherReq && license.otherReq!==''">
+        <div class="row NCBOLD-title">
+            <h4 class="NCBOLD-blue col-md-12">Other Requirements</h4>
+        </div>
+        <div Data class="row well">
+            <p class="col-md-12">{{license.otherReq}}</p>
+        </div>
+    </div> <!-- End of printer by-pass -->
+    <div class="page-break-inside-avoid" *ngIf="license?.exemptions && license.exemptions!==''" >
+        <h4 class="NCBOLD-blue">Exemptions</h4>
+        <div class="row well">
+            <div class="col-md-12">
+                <div>
+                    <p>{{license.exemptions}}</p>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End of printer by-pass -->
+    <div>
+        <div license.licenseURLLabel class="row NCBOLD-title">
+            <div class="col-md-12">
+                <h4 class="NCBOLD-blue">More Information</h4>
+            </div>
+        </div>
+        <div license.licenseURLBody class="row well">
+            <div class="col-md-12">
+                <div class="hidden-print">
+                    <a href="{{license.licenseURL}}" class="NCBOLD-link-bold">{{license.licenseURL}}</a>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End of printer by-pass -->
+    <div class="page-break-inside-avoid">
+        <div class="row NCBOLD-title page-break-inside-avoid">
+            <div class="col-md-12">
+                <p><h4 class="NCBOLD-blue">Licensing Authority</h4>
+            </div>
+        </div>
+        <div class="row well page-break-inside-avoid">
+            <div class="col-md-12">
+                <div>
+                    <a  href="{{license.url}}" target="_blank" class="NCBOLD-link-bold">{{license.board}}</a>
+                    <p>
+                        {{license.department}}<br>
+                        <span *ngIf="license.division!=='' ">{{license.division}}<br></span>
+                        <span *ngIf="license.board!=='' ">{{license.board}}<br></span>
+                        {{license.address1}}<br />
+                        <span *ngIf="license.address2 && license.address2!=='' ">{{license.address2}}<br></span>                        
+                        {{license.city}},&nbsp;{{license.st}}&nbsp;{{license.zip}}<br />
+                        <a href="tel: 1-{{license.authPhone}}p{{license.authExt}}">{{license.authPhone?license.authPhone.substr(0,3)+'-'+
+                            license.authPhone.substr(3,3)+'-'+license.authPhone.substr(6):''}}
+                            <span *ngIf="license.authExt"> Ext: {{license.authExt}}</span></a><br/>
+                        {{license.officeHours}}
+                    <div class="visible-print">
+                        <a href="{{license.url}}">{{license.url}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!--page-break-inside-avoid-->
+    <div *ngIf="license.socCode && license.socCode.trim()!=''" class="page-break-inside-avoid">
+        <div class="row NCBOLD-title">
+            <div class="col-md-12">
+                <p><h4 class="NCBOLD-blue">Occupational Information</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p>
+                <b>{{license.socTitle}}</b><br />
+                {{license.socDesc}}<p><p><p><p>
+                <a *ngIf="license.hasOccProfile" href="//nccareers.org/OccupationalProfiles/index.html?SOCCode={{license.socCode.substr(0,2)+license.socCode.substr(3,4)}}" target="_blank">Occupational profile</a>
+            </div>
+        </div>
+    </div>
+    <div style="text-align:center;">
+        Please check with your local City, County or Municipality for area specific license requirements they may have.<p></p>
+    </div>
+    <pm-footer></pm-footer>
+</div>
+
+<div *ngIf="licListPtr>=0" class="fixed-bottom float-left">
+    <a [routerLink]="['/license',licList[0]]">
+        <button class="btn btn-primary btn-ncb-wide" [disabled]="licListPtr===0"><i class="fa fas fa-angle-double-left"></i></button></a>&nbsp;                    
+    <a [routerLink]="['/license',licList[math.max(licListPtr-1,0)]]">
+        <button class="btn btn-primary btn-ncb-wide" [disabled]="licListPtr===0"><i class="fa fas fa-angle-left"></i></button></a>&nbsp;                   
+    {{licListPtr+1}} of {{licList.length}}&nbsp; 
+    <a [routerLink]="['/license',licList[math.min(licListPtr+1,licList.length-1)]]">
+        <button class="btn btn-primary btn-ncb-wide" [disabled]="licListPtr===licList.length-1"><i class="fa fas fa-angle-right"></i></button></a>&nbsp;                    
+    <a [routerLink]="['/license',licList[licList.length-1]]">
+        <button class="btn btn-primary btn-ncb-wide" [disabled]="licListPtr===licList.length-1"><i class="fa fas fa-angle-double-right"></i></button></a>&nbsp;
+</div>    
+

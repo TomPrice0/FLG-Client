@@ -1,0 +1,87 @@
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~font-awesome/css/font-awesome.min.css";
+@import "./app/quill/quill-mention.css";
+
+.tableFixHead          { overflow-y: auto; height: 65vh; }
+.tableFixHead thead th { position: sticky; top: 0; }
+
+/* Just common table stuff. Really. */
+table  { border-collapse: collapse; width: 100%; }
+th, td { padding: 1px 4px; }
+th     { background:#eee; }
+
+label {
+  font-weight: bold;
+}
+
+.smaller {
+  font-size: smaller;
+}
+
+.intro {
+  vertical-align: middle;
+  position: relative;
+  background: url(./assets/images/background.jpg);
+  background-color: #000;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  width: 100%;
+  height: 100%;
+  text-align: center !important;
+  text-shadow: 2px 2px #000;
+  padding-top: 100px;
+  padding-bottom: 100px;
+  margin: 0px
+}
+
+
+::placeholder { /* Firefox, Chrome, Opera */ 
+  font-size: smaller;
+  color: rgb(168, 109, 216); 
+  } 
+  
+  :-ms-input-placeholder { /* Internet Explorer 10-11 */ 
+  font-size: smaller;
+  color: rgb(168, 109, 216); 
+  } 
+  
+  ::-ms-input-placeholder { /* Microsoft Edge */ 
+  font-size: smaller;
+  color: rgb(168, 109, 216); 
+  } 
+
+div.page-header{
+  background-image: url(https://www.nccommerce.com/profiles/nc_site_alt/themes/nc_site_theme_commerce/img/NC-commerce-header-seal.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+h3 {
+    font-size: 24px;
+    font-weight: normal;
+    font-family: "brandon-grotesque",sans-serif;
+    color: #115072;
+}
+
+h4 {
+    font-size: 20px;
+    font-weight: normal;
+    font-family: "brandon-grotesque",sans-serif;
+    color: #115072;
+}
+
+.well {
+    min-height: 20px;
+    padding: 19px;
+    margin-bottom: 20px;
+    background-color: #f5f5f5;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+}

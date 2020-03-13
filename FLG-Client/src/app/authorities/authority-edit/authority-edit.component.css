@@ -1,0 +1,5 @@
+input {line-height: 20px;}
+.is-invalid  {
+    border-color: #dc3545;
+    border-width: 2px;}
+

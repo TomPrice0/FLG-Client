@@ -1,0 +1,122 @@
+<div class="col-md-10 offset-md-1">
+    <div class="row" *ngIf="auth.currentUser.id==user?.id">
+        <div class="col-md-8 offset-md-3">
+            <p><p>Please ensure your contact information is up-to-date. <small>(Last updated: {{ auth.currentUser.updatedDate | date: 'MM/dd/yyyy' }} ) </small><p>
+        </div>
+    </div>
+    <form *ngIf="user" class="col-md-12 col-sm-12" autocomplete="off" #userForm="ngForm">        
+        <div class="row">
+            <div class=" col-md-3">
+            </div>
+            <div class="form-group col-md-3" *ngIf="user" >
+                <label>First Name</label>
+                <input required minlength="1" ngmaxlength="50" type="text" class="form-control" #firstName="ngModel" 
+                [(ngModel)]="user.firstName" name="firstName" placeholder="First Name" 
+                [ngClass]="{'is-invalid': firstName.errors && firstName.touched }" >
+                <div style="color:red">    
+                    <div *ngIf="firstName.errors?.required && firstName.touched"><small>Required</small></div>
+                </div> 
+            </div>
+            <div class="form-group col-md-3">
+                <label>Last Name</label>
+                <input required minlength="1" ngmaxlength="50" type="text" class="form-control" #lastName="ngModel" 
+                [(ngModel)]="user.lastName" name="lastName" placeholder="Last Name"
+                [ngClass]="{'is-invalid': lastName.errors && lastName.touched }" >
+                <div style="color:red">    
+                    <div *ngIf="lastName.errors?.required && lastName.touched"><small>Required</small></div>
+                </div>                         
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                </div>
+                <div class="col-md-6">
+                    <label>Email</label>
+                    <input required minlength="1" maxlength="70" type="text" class="form-control" #email="ngModel"
+                    [(ngModel)]="user.email" name="email" 
+                    [ngClass]="{'is-invalid': email.errors && email.touched }" >
+                    <div style="color:red">    
+                        <div *ngIf="email.errors?.required && email.touched"><small>Required</small></div>
+                    </div>                                 
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+            </div>
+            <div class="form-group col-md-3">
+                <label>Phone</label>
+                <input required type="text" minlength="10" ngmaxlength="10" class="form-control"  #telephone="ngModel"
+                [(ngModel)]="user.telephone" name="telephone" placeholder="Phone" maxlength="10"
+                [ngClass]="{'is-invalid': telephone.errors && telephone.touched }" > 
+                <div style="color:red">    
+                    <div *ngIf="telephone.errors?.required && telephone.touched"><small>Required</small></div>
+                </div> 
+                </div>
+            <div class="form-group col-md-3">
+                <label>Phone Extension</label>
+                <input type="text" ngmaxlength="10" class="form-control" #teleExt="ngModel" 
+                [(ngModel)]="user.teleExt" name="teleExt" placeholder="Extension" 
+                [ngClass]="{'is-invalid': teleExt.errors && teleExt.touched }" >
+                <div style="color:red">
+                    <div *ngIf=""><small>Valid length 0 to 10 digits</small></div>
+                </div> 
+            </div>
+        </div>
+        <div *ngIf="(auth.isBlncAdmin || auth.isLeadAdmin) && user">
+            <div class="row">
+                <div class="col-md-3">
+                </div>
+                <div class="form-group col-md-4">
+                    <label>User type</label><br>
+                    <select style="width:100%; height:36px;" [(ngModel)]="user.permLevel" name="permLevel">
+                        <option value="2">Coordinator</option>
+                        <option value="3">BLNC Admin</option>
+                        <option value="4">LEAD Admin</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                </div>
+                <div class="form-group col-md-4">
+                    <label>User name</label><br>
+                    <input type="text" required maxlength="100" style="width:100%" class="form-control" #userName="ngModel" 
+                    [(ngModel)]="user.userName" name="userName"
+                    [ngClass]="{'is-invalid': userName.errors && userName.touched }" > 
+                    <div style="color:red">    
+                        <div *ngIf="userName.errors?.required && userName.touched"><small>Required</small></div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+        <div class="row">                    
+            <div class="col-md-4 ml-auto">
+                <button type="submit" class="btn btn-primary btn-ncb-wide" [disabled]="!this.isDirty && !auth.isCoordinator" (click)="this.update();">
+                    {{user.id===0?"Add":"Update" }}</button>&nbsp;
+                <button class="btn btn-outline-secondary btn-ncb-wide" (click)="this.goBack();">Cancel</button>&nbsp;&nbsp;
+            </div>
+        </div>
+
+                    
+        <div class="navbar fixed-bottom">
+            <div *ngIf="user.id!==0 && userList.length>0"> 
+                <a [routerLink]="['/user',userList[0],'edit']">
+                        <button class="btn btn-primary btn-ncb-wide" [disabled]="userListPtr===0"><i class="fa fas fa-angle-double-left"></i></button></a>&nbsp;                    
+                <a [routerLink]="['/user',userList[math.max(userListPtr-1,0)],'edit']">
+                        <button class="btn btn-primary btn-ncb-wide" [disabled]="userListPtr===0"><i class="fa fas fa-angle-left"></i></button></a>&nbsp;                   
+                {{userListPtr+1}} of {{userList.length}}&nbsp; 
+                <a [routerLink]="['/user',userList[math.min(userListPtr+1,userList.length-1)],'edit']">
+                        <button class="btn btn-primary btn-ncb-wide" [disabled]="userListPtr===userList.length-1"><i class="fa fas fa-angle-right"></i></button></a>&nbsp;                    
+                <a [routerLink]="['/user',userList[userList.length-1],'edit']">
+                        <button class="btn btn-primary btn-ncb-wide" [disabled]="userListPtr===userList.length-1"><i class="fa fas fa-angle-double-right"></i></button></a>&nbsp;
+            </div>
+        </div>
+    </form>
+</div>
+
+    
+        
