@@ -41,7 +41,7 @@
             <div class="row" *ngIf="license.licAuthId && (auth.isBlncAdmin || auth.isLeadAdmin)">
                 <label class="col-lg-1 col-md-2">Contact</label>
                 <div class="col-md-4">
-                    <span *ngIf="license.contact"><a [routerLink]="['/authority',license.licAuthId,'edit']"><i class="fa fa-user"></i>&nbsp;{{license.contact}}</a><br></span>
+                    <span *ngIf="license.contact"><a [routerLink]="['/board',license.licAuthId,'edit']"><i class="fa fa-user"></i>&nbsp;{{license.contact}}</a><br></span>
                     <span *ngIf="license.authPhone"><a href="tel: 1-{{license.authPhone}}p{{license.authExt}}"><i class="fa fa-phone"></i>&nbsp;
                             {{license.authPhone.substr(0,3)}}-{{license.authPhone.substr(3,3)}}-{{license.authPhone.substr(6,4)}}
                             {{license.authExt?.length>0?('&nbsp;&nbsp;Ext: '+license.authExt):''}}</a><br></span>

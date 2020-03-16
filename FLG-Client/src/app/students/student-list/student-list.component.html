@@ -18,9 +18,9 @@
                 <option value='z'>Any flag</option> 
             </select>   
         </div>
-        <input type="text" class="form-control" placeholder="Type license name" [(ngModel)]="searchTerms">
+        <input type="text" class="form-control" placeholder="Type student name or id" [(ngModel)]="searchTerms">
         <div *ngIf="auth.isLoggedIn" class="pull-right">&nbsp;
-            <button class="btn btn-primary btn-ncb-wide" [routerLink]="['/license/0/edit']">New License</button>
+            <button class="btn btn-primary btn-ncb-wide" [routerLink]="['/student/0/edit']">New License</button>
         </div>
     </div>
     <p><p></p>
@@ -34,7 +34,7 @@
             <tbody *ngFor="let license of licenses">
                 <tr *ngIf="filterResults(license)">
                     <td>
-                        <a [routerLink]="auth.isLoggedIn? ['/license',license.id,'edit'] :  ['/license',license.id]" 
+                        <a [routerLink]="auth.isLoggedIn? ['/student',license.id,'edit'] :  ['/license',license.id]" 
                         [innerHTML]="license.licTitle | highlight: this.searchTerms"></a>
                     </td>
                     <td *ngIf="auth.isLoggedIn">

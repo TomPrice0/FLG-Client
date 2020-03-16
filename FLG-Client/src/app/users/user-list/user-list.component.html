@@ -33,8 +33,8 @@
                     <td><a *ngIf="filterResults(user)" [routerLink]="['./user',user.id,'edit']" [innerHTML]="user.name | highlight: searchTerms"></a></td>
                     <td><a>{{user.phone}}</a></td>
                     <td><a href="mailto:{{user.email}}">{{user.email}}</a></td>
-                    <td style="text-align:center"><a [routerLink]="['../authority/','coord',user.id]">{{user.authorities}}</a></td>
-                    <td style="text-align:center"><a [routerLink]="['../license/','coord',user.id]">{{user.licenses}}</a></td>
+                    <td style="text-align:center"><a [routerLink]="['../board/','coord',user.id]">{{user.authorities}}</a></td>
+                    <td style="text-align:center"><a [routerLink]="['../student/','coord',user.id]">{{user.licenses}}</a></td>
                     <td style="text-align:center" [style.color]="user.updated<95?'red':'green'">{{user.updated}}{{user.updated!==null?'%':''}}</td>
                 </tr>            
             </tbody> 

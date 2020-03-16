@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { throwError, Observable } from 'rxjs';
 import { catchError, publishReplay, refCount, map } from 'rxjs/operators';
-import { License } from './licenses/license';
+import { Student } from './students/student';
 import { User } from './users/user';
-import { Authority } from './authorities/authority';
+import { Board } from './boards/board';
 import { Resource } from './resources/resource';
 
 @Injectable({
@@ -37,12 +37,12 @@ export class DataService {
     return this.httpClient.get(this.REST_API_SERVER+'/license/'+licenseId).pipe(catchError(this.handleError));
   }
 
-  public updateLicense(l: License) {
+  public updateLicense(l: Student) {
     this.cache['liclist']=null;   
     return this.httpClient.post(this.REST_API_SERVER+'/license',l).pipe(catchError(this.handleError));
   }
 
-  public getAllAuthorities(){
+  public getAllBoards(){
     return this.getCachedData('authlist',this.REST_API_SERVER+'/authority').pipe(catchError(this.handleError));
   }  
 
@@ -55,7 +55,7 @@ export class DataService {
     return this.httpClient.delete(this.REST_API_SERVER+'/authority/'+licAuthId.toString()).pipe(catchError(this.handleError));
   } 
 
-  public updateAuthority(a: Authority){
+  public updateAuthority(a: Board){
     this.cache['authority']=null;
     return this.httpClient.post(this.REST_API_SERVER+'/authority/',a).pipe(catchError(this.handleError));
   }

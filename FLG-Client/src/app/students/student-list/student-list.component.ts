@@ -1,9 +1,9 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { DataService } from '../../data.service';
-import { License, LicenseResolved } from '../license';
+import { Student, StudentResolved } from '../student';
 import { AuthService } from '../../users/auth.service';
 import { ActivatedRoute } from '@angular/router';
-import { Authority } from 'src/app/authorities/authority';
+import { Board } from 'src/app/boards/board';
 import { Enum } from '../enum';
 import { User } from 'src/app/users/user';
 import { Observable } from 'rxjs';
@@ -11,12 +11,12 @@ import { ListHelperService } from 'src/app/shared/list-helper.service';
 import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'pm-license-list',
-  templateUrl: './license-list.component.html',
-  styleUrls: ['./license-list.component.css'],  
+  selector: 'pm-student-list',
+  templateUrl: './student-list.component.html',
+  styleUrls: ['./student-list.component.css'],  
 })
-export class LicenseListComponent implements OnInit {
-  licenses : License[];
+export class StudentListComponent implements OnInit {
+  licenses : Student[];
   authId: number;
   authName: string;
   coordId: string;
@@ -68,7 +68,7 @@ export class LicenseListComponent implements OnInit {
       this.lh.setOrder(this.auth.isLoggedIn?this.lh.listOrder:this.lh.default);
       this.authId=this.route.snapshot.params['authid'];  
       if (this.authId){
-          this.dataService.getAuthority(this.authId).subscribe((data: Authority)=>{ 
+          this.dataService.getAuthority(this.authId).subscribe((data: Board)=>{ 
           this.authName=data.department+(!data.division ||data.division===''?'':'/'+data.division)+(!data.board || data.board===''?'':'/'+data.board);  
         });
       }

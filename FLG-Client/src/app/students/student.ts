@@ -1,5 +1,5 @@
 /* Defines the license entity */
-export interface License {
+export interface Student {
     adminNotes: string;
     appNum: string;
     appTitle: string;
@@ -76,13 +76,13 @@ export interface License {
     hasOccProfile: boolean; 
   }
   
-  export interface LicenseResolved {
+  export interface StudentResolved {
     license: any;
     error?: any;
   }
 
-  export function newLicense() : License {
-    const l:License = {
+  export function newStudent() : Student {
+    const l:Student = {
       adminNotes: '',     
       appNum: '',
       appTitle: '',

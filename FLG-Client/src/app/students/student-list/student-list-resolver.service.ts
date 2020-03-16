@@ -5,13 +5,13 @@ import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 import { DataService } from 'src/app/data.service';
-import { LicenseListResolved } from './license-list';
+import { StudentListResolved } from './student-list';
 import { AuthService } from 'src/app/users/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LicenseListResolver implements Resolve<LicenseListResolved> {
+export class StudentListResolver implements Resolve<StudentListResolved> {
   authName: string;
   constructor(private dataService: DataService, private auth: AuthService) { }
 

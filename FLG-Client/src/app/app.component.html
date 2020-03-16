@@ -15,16 +15,16 @@
     </li>
     <li class="nav-item">
       <a class="nav-link"
-         [routerLink]="['/license']"
+         [routerLink]="['/student']"
          routerLinkActive="active"
-         [routerLinkActiveOptions]="{ exact : false}">Licenses</a>
+         [routerLinkActiveOptions]="{ exact : false}">Students</a>
     </li>
     <li class="nav-item"
         *ngIf="isLoggedIn">
       <a class="nav-link"
-        [routerLink]="['/authority']"
+        [routerLink]="['/board']"
         routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact : false}">Authorities</a>
+        [routerLinkActiveOptions]="{ exact : false}">Boards</a>
     </li>
     <li class="nav-item" *ngIf="isBlncAdmin || isLeadAdmin">
       <a class="nav-link"

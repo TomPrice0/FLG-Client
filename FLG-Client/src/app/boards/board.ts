@@ -1,5 +1,5 @@
-/* Defines the authority entity */
-export interface Authority {
+/* Defines the board entity */
+export interface Board {
     address1: string;
     address2: string;
     city: string;
@@ -22,13 +22,13 @@ export interface Authority {
     haslicenses: boolean;
   }
   
-  export interface AuthorityResolved {
-    authority: Authority;
+  export interface BoardResolved {
+    authority: Board;
     error?: any;
   }
 
-  export function newAuthority(): Authority{
-    const a: Authority={
+  export function newBoard(): Board{
+    const a: Board={
       address1: '',
       address2: '',
       city: '',

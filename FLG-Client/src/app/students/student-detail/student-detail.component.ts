@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../../data.service';
-import { License } from '../license';
+import { Student } from '../student';
 import { Meta, Title } from "@angular/platform-browser";
 import { Enum } from '../enum';
 
 @Component({
-  selector: 'pm-license-detail',
-  templateUrl: './license-detail.component.html',
-  styleUrls: ['./license-detail.component.css']
+  selector: 'pm-student-detail',
+  templateUrl: './student-detail.component.html',
+  styleUrls: ['./student-detail.component.css']
 })
-export class LicenseDetailComponent implements OnInit {
-  license: License;
+export class StudentDetailComponent implements OnInit {
+  license: Student;
   licList: number[];
   licListPtr: number;
   //errorMessage: any;
@@ -53,7 +53,7 @@ export class LicenseDetailComponent implements OnInit {
   }
 
   getLicense(id){
-    this.dataService.getLicense(id).subscribe((data: License)=>{
+    this.dataService.getLicense(id).subscribe((data: Student)=>{
       this.license = data;
       this.licListPtr=this.licList.findIndex(x=>x===id);
       // Title and meta set for Googlebot/SEO

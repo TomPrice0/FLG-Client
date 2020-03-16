@@ -1,5 +1,5 @@
 /* Defines the license-list entity */
-export interface LicenseList {
+export interface StudentList {
     id: number;
     authid: number;
     coordid: number;
@@ -11,8 +11,8 @@ export interface LicenseList {
     flags: number;
 }
 
-export interface LicenseListResolved {
-    license: LicenseList[];
+export interface StudentListResolved {
+    license: StudentList[];
     error?: any;
   }
  

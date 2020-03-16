@@ -5,20 +5,20 @@ import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 import { DataService } from 'src/app/data.service';
-import { AuthorityList, AuthorityListResolved } from './authority-list';
+import { BoardList, BoardListResolved } from './board-list';
 import { AuthService } from 'src/app/users/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthorityListResolver implements Resolve<AuthorityListResolved> {
+export class BoardListResolver implements Resolve<BoardListResolved> {
   authName: string;
   constructor(private dataService: DataService, private auth: AuthService) { }
 
   resolve(route: ActivatedRouteSnapshot,
-          state: RouterStateSnapshot): Observable<AuthorityListResolved> {
+          state: RouterStateSnapshot): Observable<BoardListResolved> {
 
-  return this.dataService.getAllAuthorities()
+  return this.dataService.getAllBoards()
     .pipe(
       map(a=>({authorityList: a})), // TODO: Is the catchError below needed?
         catchError(error=> {

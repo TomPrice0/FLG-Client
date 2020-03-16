@@ -4,7 +4,7 @@ import { DataService } from '../../data.service';
 import { AuthService } from '../../users/auth.service';
 import { Location } from '@angular/common';
 import stateData from '../../shared/states.json';
-import { Authority, newAuthority } from '../authority';
+import { Board, newBoard } from '../board';
 import { HostListener } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserList } from 'src/app/users/user-list/user-list';
@@ -12,17 +12,17 @@ import { Validator } from '../../shared/validator';
 import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'pm-authority-edit',
-  templateUrl: './authority-edit.component.html',
-  styleUrls: ['./authority-edit.component.css']
+  selector: 'pm-board-edit',
+  templateUrl: './board-edit.component.html',
+  styleUrls: ['./board-edit.component.css']
 })
-export class AuthorityEditComponent implements OnInit {
+export class BoardEditComponent implements OnInit {
 
-  authorities: Authority[];
+  authorities: Board[];
   authList: number[];
   authListPtr: number;
-  currentAuthority: Authority;
-  originalAuthority: Authority;
+  currentAuthority: Board;
+  originalAuthority: Board;
   user: UserList;
   users: UserList[];
   states=[];
@@ -65,7 +65,7 @@ export class AuthorityEditComponent implements OnInit {
     }
     this.states=stateData;
     const id=this.route.snapshot.params['id'];
-    this.dataService.getAllAuthorities().subscribe((data: Authority[])=>{
+    this.dataService.getAllBoards().subscribe((data: Board[])=>{
       this.authorities = data;
   //    console.log(data);
       this.getAuthority(id);
@@ -76,7 +76,7 @@ export class AuthorityEditComponent implements OnInit {
   getAuthority(id){
     if (+id===0){
       this.isAddMode=true;
-      this.authority=newAuthority();      
+      this.authority=newBoard();      
       if (this.authorities){
         const uniqueDept = [...new Set(this.authorities.map(a=>a.department))];
         if (uniqueDept.length==1)
@@ -91,7 +91,7 @@ export class AuthorityEditComponent implements OnInit {
 //      console.log(this.authority);
     }
     else {
-      this.dataService.getAuthority(id).subscribe((data: Authority)=>{
+      this.dataService.getAuthority(id).subscribe((data: Board)=>{
         if (!data)
           this.router.navigateByUrl('/**');
         this.authority=data;

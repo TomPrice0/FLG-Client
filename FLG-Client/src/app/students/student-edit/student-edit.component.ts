@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../../data.service';
 import stateData from '../../shared/states.json';
 import { Location } from '@angular/common';
-import { License, LicenseResolved, newLicense } from '../license';
+import { Student, StudentResolved, newStudent } from '../student';
 import { AuthService } from '../../users/auth.service';
 import { HostListener } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -13,11 +13,11 @@ import { Validator } from '../../shared/validator';
 import { Title } from "@angular/platform-browser";
 
 @Component({
-  selector: 'pm-license-edit.detail',
-  templateUrl: './license-edit.component.html',
-  styleUrls: ['./license-edit.component.scss']
+  selector: 'pm-student-edit.detail',
+  templateUrl: './student-edit.component.html',
+  styleUrls: ['./student-edit.component.scss']
 })
-export class LicenseEditComponent implements OnInit{
+export class StudentEditComponent implements OnInit{
    
   authorities;
   enum: Enum[];
@@ -55,12 +55,12 @@ export class LicenseEditComponent implements OnInit{
     return Math;
   }
 
-  currentLicense:License;
-  originalLicense:License;
-  get license():License {
+  currentLicense:Student;
+  originalLicense:Student;
+  get license():Student {
     return this.currentLicense;
   }
-  set license(value:License) {
+  set license(value:Student) {
     this.currentLicense = value;
     // Clone the object to retain a copy
     this.originalLicense = value ? { ...value } : null;
@@ -111,17 +111,17 @@ export class LicenseEditComponent implements OnInit{
   
   getLicense(id:number)
   {    
-    this.dataService.getAllAuthorities().subscribe(data=>{
+    this.dataService.getAllBoards().subscribe(data=>{
       this.authorities=data;
       this.authorities.forEach(a=>a.name=a.department+(a.division!==''?'/':'')+a.division+(a.board!==''?'/':'')+a.board);
  //     console.log(this.authorities);
       if (id==0){
-        this.license=newLicense();
+        this.license=newStudent();
         this.license.department=this.authorities[0].name;
         this.license=this.license;
       }
       else {
-        this.dataService.getLicense(id).subscribe((data: License)=>{
+        this.dataService.getLicense(id).subscribe((data: Student)=>{
           this.license = data;
           if (!this.license)
             this.router.navigateByUrl('/**');

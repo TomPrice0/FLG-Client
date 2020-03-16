@@ -11,8 +11,8 @@ import { PageNotFoundComponent } from './page-not-found.component';
 
 /* Feature Modules */
 import { UserModule } from './users/user.module';
-import { LicenseModule } from './licenses/license.module';
-import { AuthorityModule } from './authorities/authority.module';
+import { StudentModule } from './students/student.module';
+import { BoardModule } from './boards/board.module';
 import { ResourceModule } from './resources/resource.module';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -25,9 +25,9 @@ import { SharedModule } from './shared/shared.module';
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
-    AuthorityModule,
+    BoardModule,
     UserModule,
-    LicenseModule,
+    StudentModule,
     ResourceModule,
     AppRoutingModule,
     SharedModule,

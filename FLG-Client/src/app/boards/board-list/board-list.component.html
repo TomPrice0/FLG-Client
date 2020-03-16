@@ -18,8 +18,8 @@
             </thead>
             <tbody *ngFor="let authority of authorities">
                 <tr *ngIf="filterResults(authority)">
-                    <td width=80%><a [routerLink]="['/authority',authority.id,'edit']" [innerHTML]="authority.name | highlight: this.searchTerms"></a></td>
-                    <td><a [routerLink]="['/license','auth',authority.id]">{{authority.licnum}}</a></td>
+                    <td width=80%><a [routerLink]="['/board',authority.id,'edit']" [innerHTML]="authority.name | highlight: this.searchTerms"></a></td>
+                    <td><a [routerLink]="['/student','auth',authority.id]">{{authority.licnum}}</a></td>
                     <td>{{authority.updateddate | date: 'MM/dd/yy h:mm a'}}</td>
                 </tr>
             </tbody>

@@ -192,14 +192,14 @@
  
                 <div class="navbar fixed-bottom">
                     <div *ngIf="!isAddMode">
-                        <a [routerLink]="['/authority',authList[0],'edit']">
+                        <a [routerLink]="['/board',authList[0],'edit']">
                             <button class="btn btn-primary btn-ncb-wide" [disabled]="authListPtr===0"><i class="fa fas fa-angle-double-left"></i></button></a>&nbsp;                    
-                        <a [routerLink]="['/authority',authList[math.max(authListPtr-1,0)],'edit']">
+                        <a [routerLink]="['/board',authList[math.max(authListPtr-1,0)],'edit']">
                                 <button class="btn btn-primary btn-ncb-wide" [disabled]="authListPtr===0"><i class="fa fas fa-angle-left"></i></button></a>&nbsp;                   
                         {{authListPtr+1}} of {{authList.length}}&nbsp; 
-                        <a [routerLink]="['/authority',authList[math.min(authListPtr+1,authList.length-1)],'edit']">
+                        <a [routerLink]="['/board',authList[math.min(authListPtr+1,authList.length-1)],'edit']">
                                 <button class="btn btn-primary btn-ncb-wide" [disabled]="authListPtr===authList.length-1"><i class="fa fas fa-angle-right"></i></button></a>&nbsp;                    
-                        <a [routerLink]="['/authority',authList[authList.length-1],'edit']">
+                        <a [routerLink]="['/board',authList[authList.length-1],'edit']">
                                 <button class="btn btn-primary btn-ncb-wide" [disabled]="authListPtr===authList.length-1"><i class="fa fas fa-angle-double-right"></i></button></a>&nbsp;
                     </div>
                     <div class="ml-auto"></div>           

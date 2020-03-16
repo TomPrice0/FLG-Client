@@ -1,5 +1,5 @@
-/* Defines the authority entity */
-export interface AuthorityList {
+/* Defines the board entity */
+export interface BoardList {
     coordId: string; 
     department: string; 
     division: string; 
@@ -11,7 +11,7 @@ export interface AuthorityList {
     updatedDate: string;
   }
 
-  export interface AuthorityListResolved {
+  export interface BoardListResolved {
     authorityList: any;
     error?: any;
   }

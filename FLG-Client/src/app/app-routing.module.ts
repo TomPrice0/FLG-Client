@@ -10,16 +10,16 @@ import { SelectiveStrategy } from './selective-strategy.service';
     RouterModule.forRoot([
       { path: 'welcome', component: WelcomeComponent },
       {
-        path: 'license',
+        path: 'student',
         data: { preload: false },
         loadChildren: () =>
-          import('./licenses/license.module').then(m => m.LicenseModule)
+          import('./students/student.module').then(m => m.StudentModule)
       },
       {
-        path: 'authority',
+        path: 'board',
         data: { preload: false },
         loadChildren: () =>
-          import('./authorities/authority.module').then(m => m.AuthorityModule)
+          import('./boards/board.module').then(m => m.BoardModule)
       },
       {
         path: 'user',

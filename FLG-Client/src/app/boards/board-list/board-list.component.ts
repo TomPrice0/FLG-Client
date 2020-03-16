@@ -7,11 +7,11 @@ import { ListHelperService } from 'src/app/shared/list-helper.service';
 import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'pm-authority-list',
-  templateUrl: './authority-list.component.html',
-  styleUrls: ['./authority-list.component.css']
+  selector: 'pm-board-list',
+  templateUrl: './board-list.component.html',
+  styleUrls: ['./board-list.component.css']
 })
-export class AuthorityListComponent implements OnInit {
+export class BoardListComponent implements OnInit {
   
   authorities=[];
   errorMessage;

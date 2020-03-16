@@ -3,9 +3,9 @@ import { RouterModule } from '@angular/router';
 import { AuthGuard } from '../users/auth.guard';
 import { EditGuard } from '../shared/edit.guard';
 import { SharedModule } from '../shared/shared.module';
-import { AuthorityListComponent } from './authority-list/authority-list.component';
-import { AuthorityEditComponent } from './authority-edit/authority-edit.component';
-import { AuthorityListResolver } from './authority-list/authority-list-resolver.service';
+import { BoardListComponent } from './board-list/board-list.component';
+import { BoardEditComponent } from './board-edit/board-edit.component';
+import { BoardListResolver } from './board-list/board-list-resolver.service';
 import { ListGuard } from '../shared/list.guard';
 
 @NgModule({
@@ -13,29 +13,29 @@ import { ListGuard } from '../shared/list.guard';
     SharedModule,
     RouterModule.forChild([
       {
-        path: 'authority/:id/edit',
-        component: AuthorityEditComponent,
+        path: 'board/:id/edit',
+        component: BoardEditComponent,
         canActivate: [AuthGuard],
         canDeactivate: [EditGuard]   
           //    resolve: { resolvedData: LicenseResolver }
       },
       {
-        path: 'authority/coord/:coordid', component: AuthorityListComponent ,
+        path: 'board/coord/:coordid', component: BoardListComponent ,
         canActivate: [AuthGuard],
-        resolve: { resolvedData: AuthorityListResolver }      
+        resolve: { resolvedData: BoardListResolver }      
       },    
       {
-        path: 'authority', component: AuthorityListComponent ,
+        path: 'board', component: BoardListComponent ,
         canActivate: [AuthGuard],
         canDeactivate: [ListGuard],
-        resolve: { resolvedData: AuthorityListResolver }      
+        resolve: { resolvedData: BoardListResolver }      
       }
      ])
   ],
 
   declarations: [
-    AuthorityListComponent,
-    AuthorityEditComponent 
+    BoardListComponent,
+    BoardEditComponent 
   ]
 })
-export class AuthorityModule { }
+export class BoardModule { }
