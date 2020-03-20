@@ -28,16 +28,34 @@
     </li>
     <li class="nav-item" *ngIf="isBlncAdmin || isLeadAdmin">
       <a class="nav-link"
+        [routerLink]="['/college']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact : false}">Colleges</a>
+    </li>
+    <li class="nav-item" *ngIf="isBlncAdmin || isLeadAdmin">
+      <a class="nav-link"
+        [routerLink]="['/vendor']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact : false}">Vendors</a>
+    </li>
+    <li class="nav-item" *ngIf="isBlncAdmin || isLeadAdmin">
+      <a class="nav-link"
         [routerLink]="['/resource']"
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact : false}">Resources</a>
     </li>
     <li class="nav-item" *ngIf="isBlncAdmin || isLeadAdmin">
-  <a class="nav-link"
-    [routerLink]="['/user']"
-    routerLinkActive="active"
-    [routerLinkActiveOptions]="{ exact : false}">Users</a>
-</li>
+      <a class="nav-link"
+        [routerLink]="['/user']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact : false}">Users</a>
+    </li>
+    <li class="nav-item" *ngIf="isBlncAdmin || isLeadAdmin">
+      <a class="nav-link"
+        [routerLink]="['/user']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact : false}">System</a>
+    </li>
   </ul>
   <ul class="navbar-nav ml-auto">
     <li class="nav-item"

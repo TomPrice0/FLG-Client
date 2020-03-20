@@ -18,6 +18,10 @@ import { ResourceModule } from './resources/resource.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './users/auth.interceptor';
 import { SharedModule } from './shared/shared.module';
+import { VendorEditComponent } from './vendors/vendor-edit/vendor-edit.component';
+import { VendorListComponent } from './vendors/vendor-list/vendor-list.component';
+import { CollegeListComponent } from './colleges/college-list/college-list.component';
+import { CollegeEditComponent } from './colleges/college-edit/college-edit.component';
 
 @NgModule({
   imports: [
@@ -36,6 +40,10 @@ import { SharedModule } from './shared/shared.module';
     AppComponent,
     WelcomeComponent,
     PageNotFoundComponent,
+    VendorEditComponent,
+    VendorListComponent,
+    CollegeListComponent,
+    CollegeEditComponent,
 //   FooterComponent, 
   ],
   bootstrap: [AppComponent],
