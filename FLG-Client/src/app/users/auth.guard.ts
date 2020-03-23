@@ -36,7 +36,7 @@ export class AuthGuard implements CanActivate, CanLoad {
   }
 
   checkProfileAllowed(url: string): boolean {
-    if (!this.authService.isCoordinator)
+    if (!this.authService.isWdbEntry)
       return true;
     let segment=url.toLowerCase().split('/');
     if (segment.length<4)

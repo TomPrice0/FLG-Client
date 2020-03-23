@@ -17,12 +17,12 @@ export class StudentListResolver implements Resolve<StudentListResolved> {
 
   resolve(route: ActivatedRouteSnapshot,
           state: RouterStateSnapshot): Observable<any> {
-    return this.dataService.getAllLicenses()
-      .pipe(map(license=>({license: license})), // TODO: Is the catchError below needed?
+    return this.dataService.getAllStudents()
+      .pipe(map(student=>({student: student})), // TODO: Is the catchError below needed?
           catchError(error=> {
             const message = `Retrieval error: ${error}`;
             console.error(message);
-            return of({ license: null, error: message });
+            return of({ student: null, error: message });
         })
       );
     };

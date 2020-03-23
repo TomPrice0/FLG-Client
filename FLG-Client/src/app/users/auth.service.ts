@@ -21,23 +21,54 @@ export class AuthService {
     return !!this.currentUser;
   }
 
-  get isCoordinator(): boolean {
+  get isAdmin(): boolean {
     if (!this.currentUser)
       return false;
-    return this.currentUser['permLevel']==2;
+    return this.currentUser['role']==1;
   }
 
-  get isBlncAdmin(): boolean {
+  get isWdbEntry(): boolean {
     if (!this.currentUser)
       return false;
-    return this.currentUser['permLevel']==3;
+    return this.currentUser['role']==2;
   }
 
-  get isLeadAdmin(): boolean {
+  get isWdbApprover(): boolean {
     if (!this.currentUser)
       return false;
-    return this.currentUser['permLevel']==4;
+    return this.currentUser['role']==3;
   }
+
+  get isWdbInquiry(): boolean {
+    if (!this.currentUser)
+      return false;
+    return this.currentUser['role']==4;
+  }
+
+  get isCollege(): boolean {
+    if (!this.currentUser)
+      return false;
+    return this.currentUser['role']==5;
+  } 
+
+  get isStateInquiry(): boolean {
+    if (!this.currentUser)
+      return false;
+    return this.currentUser['role']==6;
+  }
+
+  get isStudent(): boolean {
+    if (!this.currentUser)
+      return false;
+    return this.currentUser['role']==7;
+  }
+
+  get isVendor(): boolean {
+    if (!this.currentUser)
+      return false;
+    return this.currentUser['role']==8;
+  }
+
 
   constructor(private messageService: MessageService, private dataService: DataService, 
     private router: Router) {  }
@@ -59,13 +90,11 @@ export class AuthService {
  
       sessionStorage.setItem("currentUser", JSON.stringify(currentUser));   
 
-      if (currentUser.permLevel==2 && currentUser.updatedDate< this.getFilterDate()) {
-        this.router.navigate(['/user',currentUser.id,'edit']);
-      }
-      else if (this.redirectUrl) {
+      if (this.redirectUrl) {
         this.router.navigateByUrl(this.redirectUrl);
-      }       else {
-        this.router.navigate(['/license']);
+      }
+      else {
+        this.router.navigate(['/student']);
       }
     });
   }

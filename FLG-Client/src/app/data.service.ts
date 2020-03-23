@@ -11,7 +11,7 @@ import { Resource } from './resources/resource';
   providedIn: 'root'
 })
 export class DataService {
-  private REST_API_SERVER = "http://tom.ncbold.com/api"; //http://localhost:2724/api"; //2724 //";  //
+  private REST_API_SERVER = "http://localhost:62469/api"; //2724 //";  //http://tom.ncbold.com/api"; //
   constructor(private httpClient: HttpClient) { }
 
   handleError(error: HttpErrorResponse) {
@@ -29,35 +29,35 @@ export class DataService {
     return throwError(errorMessage);
   }
 
-  public getAllLicenses(){
-    return this.getCachedData('liclist',`${this.REST_API_SERVER}/license`).pipe(catchError(this.handleError));
+  public getAllStudents(){
+    return this.httpClient.get(`${this.REST_API_SERVER}/student`).pipe(catchError(this.handleError));
   }
 
-  public getLicense(licenseId: number){
-    return this.httpClient.get(this.REST_API_SERVER+'/license/'+licenseId).pipe(catchError(this.handleError));
+  public getStudent(studentId: number){
+    return this.httpClient.get(this.REST_API_SERVER+'/student/'+studentId).pipe(catchError(this.handleError));
   }
 
-  public updateLicense(l: Student) {
+  public updateStudent(l: Student) {
     this.cache['liclist']=null;   
-    return this.httpClient.post(this.REST_API_SERVER+'/license',l).pipe(catchError(this.handleError));
+    return this.httpClient.post(this.REST_API_SERVER+'/student',l).pipe(catchError(this.handleError));
   }
 
   public getAllBoards(){
-    return this.getCachedData('authlist',this.REST_API_SERVER+'/authority').pipe(catchError(this.handleError));
+    return this.getCachedData('authlist',this.REST_API_SERVER+'/board').pipe(catchError(this.handleError));
   }  
 
-  public getAuthority(licAuthId: number){
-    return this.httpClient.get(this.REST_API_SERVER+'/authority/'+licAuthId.toString()).pipe(catchError(this.handleError));
+  public getBoard(boardId: number){
+    return this.httpClient.get(this.REST_API_SERVER+'/board/'+boardId.toString()).pipe(catchError(this.handleError));
   } 
 
-  public deleteAuthority(licAuthId: number){
-    this.cache['authority']=null;
-    return this.httpClient.delete(this.REST_API_SERVER+'/authority/'+licAuthId.toString()).pipe(catchError(this.handleError));
+  public deleteBoard(boardId: number){
+    this.cache['board']=null;
+    return this.httpClient.delete(this.REST_API_SERVER+'/board/'+boardId.toString()).pipe(catchError(this.handleError));
   } 
 
-  public updateAuthority(a: Board){
-    this.cache['authority']=null;
-    return this.httpClient.post(this.REST_API_SERVER+'/authority/',a).pipe(catchError(this.handleError));
+  public updateBoard(a: Board){
+    this.cache['board']=null;
+    return this.httpClient.post(this.REST_API_SERVER+'/board/',a).pipe(catchError(this.handleError));
   }
 
   public getAllResources(){

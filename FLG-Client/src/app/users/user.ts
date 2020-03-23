@@ -8,7 +8,7 @@ export interface User {
   teleExt: string;
   userName: string;
   updatedDate: string;
-  permLevel: number;
+  role: number;
   updatedBy: string;
   token: string;
 }
@@ -23,7 +23,7 @@ export function newUser():User{
     teleExt: null,
     userName: null,
     updatedDate: null,
-    permLevel: null,
+    role: null,
     updatedBy: null,
     token: null,
   }

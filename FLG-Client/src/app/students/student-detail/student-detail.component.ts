@@ -11,9 +11,9 @@ import { Enum } from '../enum';
   styleUrls: ['./student-detail.component.css']
 })
 export class StudentDetailComponent implements OnInit {
-  license: Student;
-  licList: number[];
-  licListPtr: number;
+  student: Student;
+  studentList: number[];
+  studentListPtr: number;
   //errorMessage: any;
   enums: Enum[];
   enumFields=[
@@ -26,7 +26,7 @@ export class StudentDetailComponent implements OnInit {
     {name: 'phy', col: 'physical', label: 'Physical requirements:'},
     {name: 'vet', col: 'veteran', label: 'Veteran:'},
     {name: 'active', col: 'inactive', label: 'Active status:'},
-    {name: 'types', col: 'licenseType', label: 'License Type:'},
+    {name: 'types', col: 'studentType', label: 'student Type:'},
    ];
   
   // https://stackoverflow.com/questions/54889941/how-to-use-math-min-or-math-max-syntax-in-angular-template
@@ -40,37 +40,37 @@ export class StudentDetailComponent implements OnInit {
     this.route.params.subscribe(
       params => {
           const id = +params['id'];
-          this.getLicense(id);
+          this.getStudent(id);
       }
     );    
-    let list=sessionStorage.getItem('liclist');
+    let list=sessionStorage.getItem('studentlist');
     if (list){      
-      this.licList=JSON.parse(list);
+      this.studentList=JSON.parse(list);
     }
     this.dataService.getEnum().subscribe((data: Enum[])=>{
       this.enums=data;
     });
   }
 
-  getLicense(id){
-    this.dataService.getLicense(id).subscribe((data: Student)=>{
-      this.license = data;
-      this.licListPtr=this.licList.findIndex(x=>x===id);
+  getStudent(id){
+    this.dataService.getStudent(id).subscribe((data: Student)=>{
+      this.student = data;
+      this.studentListPtr=this.studentList.findIndex(x=>x===id);
       // Title and meta set for Googlebot/SEO
       this.meta.removeTag("name='keywords'");
       this.meta.removeTag("name='description'");
-      if (!!this.license.keywords){
-        this.meta.addTag({name: "keywords", content: this.license.keywords.toLowerCase().replace("~",", ")});
+      if (!!this.student.keywords){
+        this.meta.addTag({name: "keywords", content: this.student.keywords.toLowerCase().replace("~",", ")});
       }
-      if (!!this.license.socTitle){
-        this.meta.addTag({name: "description", content: `applying for an occupational license for ${this.license.socCode} ${this.license.socTitle.toLowerCase()} in North Carolina`});        
+      if (!!this.student.socTitle){
+        this.meta.addTag({name: "description", content: `applying for an occupational student for ${this.student.socCode} ${this.student.socTitle.toLowerCase()} in North Carolina`});        
       }
-      this.title.setTitle(`Licensing for ${this.license.licTitle} in North Carolina`);
+      this.title.setTitle(`Activity for ${this.student.licTitle} in North Carolina`);
     }) 
   }
 
   getEnums(){
-    return this.enumFields.filter(e=>!!this.license[e.col]); 
+    return this.enumFields.filter(e=>!!this.student[e.col]); 
   }  
 
   getEnumVal(name: string, key: string){

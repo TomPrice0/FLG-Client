@@ -77,7 +77,7 @@ export interface Student {
   }
   
   export interface StudentResolved {
-    license: any;
+    student: any;
     error?: any;
   }
 

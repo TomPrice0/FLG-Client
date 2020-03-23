@@ -18,11 +18,11 @@ import { Title } from '@angular/platform-browser';
 })
 export class BoardEditComponent implements OnInit {
 
-  authorities: Board[];
+  boards: Board[];
   authList: number[];
   authListPtr: number;
-  currentAuthority: Board;
-  originalAuthority: Board;
+  currentBoard: Board;
+  originalBoard: Board;
   user: UserList;
   users: UserList[];
   states=[];
@@ -39,13 +39,13 @@ export class BoardEditComponent implements OnInit {
     return Math;
   }
 
-  get authority() {
-    return this.currentAuthority;
+  get board() {
+    return this.currentBoard;
   }
-  set authority(value) {
-    this.currentAuthority = value;
+  set board(value) {
+    this.currentBoard = value;
     // Clone the object to retain a copy
-    this.originalAuthority = value ? { ...value } : null;
+    this.originalBoard = value ? { ...value } : null;
   } 
   
   constructor(public auth: AuthService, private dataService: DataService, private route: ActivatedRoute, private router:Router,
@@ -55,7 +55,7 @@ export class BoardEditComponent implements OnInit {
     this.route.params.subscribe(
       params => {
           const id = +params['id'];
-          this.getAuthority(id);
+          this.getBoard(id);
       }
     );
     
@@ -66,57 +66,46 @@ export class BoardEditComponent implements OnInit {
     this.states=stateData;
     const id=this.route.snapshot.params['id'];
     this.dataService.getAllBoards().subscribe((data: Board[])=>{
-      this.authorities = data;
+      this.boards = data;
   //    console.log(data);
-      this.getAuthority(id);
+      this.getBoard(id);
     });
-    this.initCoordinatorList();
   }
 
-  getAuthority(id){
+  getBoard(id){
     if (+id===0){
       this.isAddMode=true;
-      this.authority=newBoard();      
-      if (this.authorities){
-        const uniqueDept = [...new Set(this.authorities.map(a=>a.department))];
+      this.board=newBoard();      
+      if (this.boards){
+        const uniqueDept = [...new Set(this.boards.map(a=>a.department))];
         if (uniqueDept.length==1)
-          this.authority.department=this.authorities[0].department;
-      //  this.authority.division=this.authorities[0].division;     // Nicole request 01/31/20
+          this.board.department=this.boards[0].department;
+      //  this.board.division=this.boards[0].division;     // Nicole request 01/31/20
       }
-      if (this.authorityForm){
-//        console.log(this.authorityForm.form.controls)
-        this.authorityForm.form.controls['searchCoordTerms'].status='INVALID';
+      if (this.boardForm){
+//        console.log(this.boardForm.form.controls)
+        this.boardForm.form.controls['searchCoordTerms'].status='INVALID';
       }
       this.validateName();     
-//      console.log(this.authority);
+//      console.log(this.board);
     }
     else {
-      this.dataService.getAuthority(id).subscribe((data: Board)=>{
+      this.dataService.getBoard(id).subscribe((data: Board)=>{
         if (!data)
           this.router.navigateByUrl('/**');
-        this.authority=data;
-        this.title.setTitle(`Editing ${this.authority.department}/${this.authority.division}/${this.authority.board}`);
+        this.board=data;
+        this.title.setTitle(`Editing ${this.board.department}/${this.board.division}/${this.board.board}`);
         this.validateName();
         this.authListPtr=this.authList.findIndex(x=>x===+id);
         if (this.users)
-          this.selectCoord(+this.authority.coordId);
+          this.selectCoord(+this.board.coordId);
       })
     };
   }  
 
   resetCoordId(event) {
     if (event.key=='Escape')
-      this.selectCoord(+this.authority.coordId);
-  }
-
-  initCoordinatorList() {
-    if (!this.auth.isCoordinator){
-      this.dataService.getAllUsers().subscribe((data: UserList[])=>{
-        this.users=data;
-        this.selectCoord(+this.authority.coordId);
-  //      this.authority=this.authority;
-      });
-    }
+      this.selectCoord(+this.board.coordId);
   }
 
   @HostListener('window:beforeunload')
@@ -124,17 +113,17 @@ export class BoardEditComponent implements OnInit {
         return !this.isDirty;
     }
 
-  @ViewChild('authForm', {static: false}) authorityForm: any;
+  @ViewChild('authForm', {static: false}) boardForm: any;
 
   get isDirty(): boolean {
-//    console.log(this.originalAuthority,this.currentAuthority);
-    return JSON.stringify(this.originalAuthority) !== JSON.stringify(this.currentAuthority);
+//    console.log(this.originalboard,this.currentboard);
+    return JSON.stringify(this.originalBoard) !== JSON.stringify(this.currentBoard);
   }
 
   deleteAuth(){
     if (confirm ("Are you sure?")){
-      this.dataService.deleteAuthority(this.authority.id).subscribe(()=>{
-        const n=this.authList.indexOf(this.authority.id);
+      this.dataService.deleteBoard(this.board.id).subscribe(()=>{
+        const n=this.authList.indexOf(this.board.id);
         if (n>=0 && this.authList.length>1)
           this.authList.splice(n,1);
         this.goBack();}
@@ -143,11 +132,11 @@ export class BoardEditComponent implements OnInit {
   }
 
   getDepartment(){
-    return this.authorities.map(a=>a.department);
+    return this.boards.map(a=>a.department);
   }
 
   getDivision(){
-    return this.authorities.filter(a=>a.department==this.authority.department).map((a)=>a.division); 
+    return this.boards.filter(a=>a.department==this.board.department).map((a)=>a.division); 
   }
 
   goBack() {
@@ -155,13 +144,13 @@ export class BoardEditComponent implements OnInit {
   }
 
   filterDepartmentResults (name: any){
-    const re=new RegExp(this.authority.department, 'gi');    
+    const re=new RegExp(this.board.department, 'gi');    
     return name.match(re);
   }
 
   // Almost identical to filterDepartmentResults
   filterDivisionResults (name: string){
-    const re=new RegExp(this.authority.division, 'gi');    
+    const re=new RegExp(this.board.division, 'gi');    
     return name.match(re);
   }  
   
@@ -172,10 +161,10 @@ export class BoardEditComponent implements OnInit {
 
   selectDepartment(department: string)
   {
-    this.authority.department=department;
-    let a=this.authorities.find(c=>c.department===department);
+    this.board.department=department;
+    let a=this.boards.find(c=>c.department===department);
     if (a){
-      this.authority.division=a.division;
+      this.board.division=a.division;
     }
     this.showDepartmentSearchBox=false;
     return false; // Apparently needed but why? 02/01/20
@@ -194,7 +183,7 @@ export class BoardEditComponent implements OnInit {
   }
   
   selectDivision(division: string){
-    this.authority.division=division;
+    this.board.division=division;
     this.showDivisionSearchBox=false;
     return false; // Apparently needed but why? 02/01/20
   }
@@ -206,25 +195,25 @@ export class BoardEditComponent implements OnInit {
   }
     
   validateName(){
-    if (!this.authorities){
+    if (!this.boards){
       this.isAllowedDepartment=true;
       return;
     }
-    this.isAllowedDepartment=!!this.authorities.find(f=>f.department==this.authority.department)|| !this.auth.isCoordinator;
-    let a=this.authorities.find(f=>f.department===this.authority.department &&
-      f.division===this.authority.division && f.board===this.authority.board && f.id !== +this.authority.id );
+    this.isAllowedDepartment=!!this.boards.find(f=>f.department==this.board.department);
+    let a=this.boards.find(f=>f.department===this.board.department &&
+      f.division===this.board.division && f.board===this.board.board && f.id !== +this.board.id );
     this.isAllowedBoard=!a;
-    // console.log('In validate name', this.isAllowedDepartment, this.authority, a);
+    // console.log('In validate name', this.isAllowedDepartment, this.board, a);
   }
 
   selectCoord(id: number){
     if (id>0){
       this.user=this.users.find(c=>c.id===id);
       this.searchCoordTerms=this.user.name;  
-      this.authority.coordId=(1000+id).toString().substring(1);
+      this.board.coordId=(1000+id).toString().substring(1);
     }
     this.showCoordSearchBox=false;
-    this.authorityForm.form.controls['searchCoordTerms'].status='VALID';
+    this.boardForm.form.controls['searchCoordTerms'].status='VALID';
     return false; // Required
   }
   
@@ -233,11 +222,11 @@ export class BoardEditComponent implements OnInit {
   }
   
   update():void {
-    if (this.v.validate(this.authorityForm))
+    if (this.v.validate(this.boardForm))
     {
-      this.dataService.updateAuthority(this.authority).subscribe((data: number)=>{
-        this.authority.id=data;
-        this.authority=this.authority;  // Current now original
+      this.dataService.updateBoard(this.board).subscribe((data: number)=>{
+        this.board.id=data;
+        this.board=this.board;  // Current now original
 //        this.goBack();
       });
     }

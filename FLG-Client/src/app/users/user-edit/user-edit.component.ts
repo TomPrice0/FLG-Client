@@ -31,7 +31,7 @@ export class UserEditComponent implements OnInit {
   }
 
   goBack() {
-    if (this.auth.isCoordinator)
+    if (this.auth.isWdbEntry)
     {
       this.auth.currentUser.updatedDate=null;
       if (!!this.auth.redirectUrl){
@@ -40,7 +40,7 @@ export class UserEditComponent implements OnInit {
         this.router.navigateByUrl(url);
       }
       else
-        this.router.navigateByUrl('/license');
+        this.router.navigateByUrl('/student');
     }
     else
       this._location.back();
@@ -96,7 +96,7 @@ export class UserEditComponent implements OnInit {
   update():void {
     if (this.v.validate(this.userForm)){
       this.dataService.updateUser(this.user).subscribe((data: number)=>{
-        if (this.auth.isCoordinator)
+        if (this.auth.isWdbEntry)
           this.router.navigateByUrl(this.auth.redirectUrl);
         this.user.id=data;
         this.user=this.user;  // Resets base for dirty

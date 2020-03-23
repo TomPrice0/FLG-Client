@@ -16,8 +16,8 @@ import { Meta, Title } from '@angular/platform-browser';
   styleUrls: ['./student-list.component.css'],  
 })
 export class StudentListComponent implements OnInit {
-  licenses : Student[];
-  authId: number;
+  students : Student[];
+  boardId: number;
   authName: string;
   coordId: string;
   coordName: string;
@@ -26,49 +26,46 @@ export class StudentListComponent implements OnInit {
   enums: any; 
 
   cols=[
-    {name: "licTitle", label: "License"},
-    {name: "licenseUpdated", label: "Updated"},
+    {name: "userName", label: "User Name"},
+    {name: "name", label: "Student name"},
+    {name: "primaryPhone", label: "Phone"},
+    {name: "BirthDate", label: "Birth Date"},
+    {name: "ActiveDate", label: "Active"},
     {name: "flags", label: "Status flags"},    
   ];
   
   terms: string[];
 
   get searchTerms(): string{
-    let val=sessionStorage.getItem('licSearchTerms')||'';
+    let val=sessionStorage.getItem('studentSearchTerms')||'';
     this.terms=val.split(' '); // Needed? 02/02/20
     return val;
   }
   set searchTerms(val: string) {
     this.terms=val.split(' '); 
-    sessionStorage.setItem('licSearchTerms', val);
+    sessionStorage.setItem('studentSearchTerms', val);
   }
 
   constructor(private dataService: DataService, public auth: AuthService, private route: ActivatedRoute, 
     public lh: ListHelperService, private meta: Meta,  private title: Title ) { }
   
   ngOnInit() {
-    this.lh.list='lic';
-    this.lh.default='licTitle';
+    this.lh.list='student';
+    this.lh.default='name';
     this.meta.removeTag("name='keywords'");
     this.meta.removeTag("name='description'");
-    this.title.setTitle(`All licenses required by state statutes in North Carolina`);
-    this.meta.addTag({name: "description", content: `North Carolina Business & Occupational License Database (NCBOLD) is a repository for business license information maintained by the North Carolina Department of Commerce. This searchable database enables users to gather information pertaining to North Carolina business, occupational and privilege licensing requirements. Searching by license title and filtering by license type will provide the user with valuable information such as agency contact, license requirements, links to applications and inter-state licensing reciprocity. NCBOLD data is collected annually by the associated agencies, boards and commissions per NC General Statute. Business license data will be used to assist current and potential businesses to successfully start or expand within North Carolina. Occupational data is used in career exploration, workforce applications and will be incorporated with the NCCareer.org website. Please check with your local City, County or Municipality for area specific license requirements they may have.`});        
-    if (this.auth.isLoggedIn){!
-      this.dataService.getEnum().subscribe((data: Enum[])=>{
-        this.enums=data;
-      });
-    }    
+    this.title.setTitle(`All students`);
     this.route.data.subscribe(data => {
-//      console.log(data);
-      const licenses: any = data.resolvedData;
-//      this.errorMessage = licenses.error;
-      this.licenses = licenses.license;
-      this.lh.array = this.licenses;
+      console.log(data);
+      const students: any = data.resolvedData;
+//      this.errorMessage = students.error;
+      this.students = students.student;
+      this.lh.array = this.students;
       this.lh.orderDesc=!this.lh.orderDesc;
       this.lh.setOrder(this.auth.isLoggedIn?this.lh.listOrder:this.lh.default);
-      this.authId=this.route.snapshot.params['authid'];  
-      if (this.authId){
-          this.dataService.getAuthority(this.authId).subscribe((data: Board)=>{ 
+      this.boardId=this.route.snapshot.params['boardid'];  
+      if (this.boardId){
+          this.dataService.getBoard(this.boardId).subscribe((data: Board)=>{ 
           this.authName=data.department+(!data.division ||data.division===''?'':'/'+data.division)+(!data.board || data.board===''?'':'/'+data.board);  
         });
       }
@@ -97,14 +94,15 @@ export class StudentListComponent implements OnInit {
     "z": 255
   };
 
-  filterResults (license: any){
+  filterResults (student: any){
     if (this.auth.isLoggedIn) {
-      return (!this.authId || license.authid==this.authId) &&
-          (!this.coordId || license.coordid==this.coordId) &&
-          ( this.filterActive=='' || this.filterActive==license.activeStatus || license.flags&this.filterMask[this.filterActive]) &&
-         this.terms.every((term)=>{if (term.length==0) return true; let re=new RegExp(term, 'gi'); return license.licTitle.match(re)||license.keywords.match(re);});
+      return true; 
+   //   (!this.authId || student.authid==this.authId) &&
+   //       (!this.coordId || student.coordid==this.coordId) &&
+   //       ( this.filterActive=='' || this.filterActive==student.activeStatus || student.flags&this.filterMask[this.filterActive]) &&
+   //      this.terms.every((term)=>{if (term.length==0) return true; let re=new RegExp(term, 'gi'); return student.name.match(re)||student.keywords.match(re);});
     }
-    else return this.terms.every((term)=>{if (term.length==0) return true; let re=new RegExp(term, 'gi'); return license.licTitle.match(re)||license.keywords.match(re);});   
+    else return this.terms.every((term)=>{if (term.length==0) return true; let re=new RegExp(term, 'gi'); return student.name.match(re)||student.keywords.match(re);});   
   }
 
   filterEnum (name: string){
@@ -127,16 +125,16 @@ export class StudentListComponent implements OnInit {
 
   flagLabels(flags: number): string[]{
     let rv=[];
-    if (flags & 1 && !this.auth.isCoordinator) rv.push({tip:'Occupation needed',color:"blue",icon: "male"});
-    if (flags & 2 && !this.auth.isCoordinator) rv.push({tip:'License type needed',color:"saddlebrown",icon: "flag"});
+    if (flags & 1) rv.push({tip:'Occupation needed',color:"blue",icon: "male"});
+    if (flags & 2) rv.push({tip:'License type needed',color:"saddlebrown",icon: "flag"});
     if (flags & 4) rv.push({tip:'Transfer request',color:"orange",icon: "bus"});
-    if (flags & 8) rv.push({tip:'Licenses issued needed',color:"green",icon: "inbox"});
+    if (flags & 8) rv.push({tip:'students issued needed',color:"green",icon: "inbox"});
     return rv;
   }
   
   saveList() {
     let list=[];
-    this.licenses.forEach(l=> {if (this.filterResults(l))
+    this.students.forEach(l=> {if (this.filterResults(l))
       list.push(l.id);
     });
     sessionStorage.setItem("liclist",JSON.stringify(list));

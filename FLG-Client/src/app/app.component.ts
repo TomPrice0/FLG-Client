@@ -10,7 +10,7 @@ import { slideInAnimation } from './app.animation';
   animations: [slideInAnimation]
 })
 export class AppComponent {
-  pageTitle = 'NC Business and Occupational License Database';
+  pageTitle = 'NC Finish Line Grants';
   metaTags = '';
   loading = true;  
 
@@ -32,27 +32,63 @@ export class AppComponent {
     return null;
   }
 
-  get isCoordinator(): boolean {
+  get isAdmin(): boolean {
     if (this.authService.currentUser){
-      return this.authService.currentUser.permLevel==2;
+      return this.authService.currentUser.role==1;
     }
     return false;
   }
 
-  get isBlncAdmin(): boolean {
+  get isWdbEntry(): boolean {
     if (this.authService.currentUser){
-      return this.authService.currentUser.permLevel==3;
+      return this.authService.currentUser.role==2;
     }
     return false;
   }
 
-  get isLeadAdmin(): boolean {
+  get isWdbApprover(): boolean {
     if (this.authService.currentUser){
-      return this.authService.currentUser.permLevel==4;
+      return this.authService.currentUser.role==3;
     }
     return false;
   }
- 
+
+  get isWdbInquiry(): boolean {
+    if (this.authService.currentUser){
+      return this.authService.currentUser.role==4;
+    }
+    return false; 
+  }
+
+  get isCollege(): boolean {
+    if (this.authService.currentUser){
+      return this.authService.currentUser.role==5;
+    }
+    return false;
+
+  } 
+
+  get isStateInquiry(): boolean {
+    if (this.authService.currentUser){
+      return this.authService.currentUser.role==6;
+    }
+    return false;
+  }
+
+  get isStudent(): boolean {
+    if (this.authService.currentUser){
+      return this.authService.currentUser.role==7;
+    }
+    return false;
+  }
+
+  get isVendor(): boolean {
+    if (this.authService.currentUser){
+      return this.authService.currentUser.role==8;
+    }
+    return false;
+  }
+  
   constructor(private authService: AuthService,
               private router: Router) {
     router.events.subscribe((routerEvent: Event) => {

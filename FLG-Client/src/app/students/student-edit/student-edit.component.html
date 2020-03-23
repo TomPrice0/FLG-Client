@@ -13,7 +13,7 @@
                 </div>
             </div>
             
-            <div class="row" *ngIf="auth.isBlncAdmin || auth.isLeadAdmin">
+            <div class="row" *ngIf="auth.isAdmin || auth.isLeadAdmin">
                 <div class="form-group col-md-12">
                     <label>Admin Notes</label>
                     <textarea type="text" class="form-control" rows="3" name="adminNotes" [(ngModel)]="license.adminNotes"></textarea>
@@ -38,7 +38,7 @@
                      </div>                     
                 </div>
             </div>
-            <div class="row" *ngIf="license.licAuthId && (auth.isBlncAdmin || auth.isLeadAdmin)">
+            <div class="row" *ngIf="license.licAuthId && (auth.isAdmin || auth.isLeadAdmin)">
                 <label class="col-lg-1 col-md-2">Contact</label>
                 <div class="col-md-4">
                     <span *ngIf="license.contact"><a [routerLink]="['/board',license.licAuthId,'edit']"><i class="fa fa-user"></i>&nbsp;{{license.contact}}</a><br></span>
@@ -70,7 +70,7 @@
                 </div>
             </div>            
  
-            <div class="row" *ngIf="auth.isLeadAdmin || auth.isBlncAdmin">
+            <div class="row" *ngIf="auth.isLeadAdmin || auth.isAdmin">
                 <div class="form-group col-md-12">
                     <label for="keywords">Keywords: </label>
                     <tag-input name="tagList" [(ngModel)]="license.tagList">
