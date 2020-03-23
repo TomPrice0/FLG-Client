@@ -18,7 +18,7 @@ export class BoardListResolver implements Resolve<BoardListResolved> {
   resolve(route: ActivatedRouteSnapshot,
           state: RouterStateSnapshot): Observable<BoardListResolved> {
 
-  return this.dataService.getAllBoards()
+  return this.dataService.getAll('board')
     .pipe(
       map(a=>({authorityList: a})), // TODO: Is the catchError below needed?
         catchError(error=> {

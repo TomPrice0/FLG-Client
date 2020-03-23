@@ -53,23 +53,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" *ngIf="!auth.isCoordinator && users && authority">
-                    <label class="col-md-2">Coordinator</label>
-                    <div class="form-group col-md-4">                        
-                        <input required type="text" class="form-control" style="width:100%" [(ngModel)]="searchCoordTerms" name="searchCoordTerms" #searchCoordTerms1="ngModel"
-                            (focus)="coordBoxIn();$event.target.select();"
-                            (keydown)="resetCoordId($event)"
-                            [ngClass]="{'is-invalid': !authority.coordId && searchCoordTerms1.touched }">
-                        <div *ngIf="showCoordSearchBox" style="max-height:150px; overflow: auto;"> 
-                            <div *ngFor="let c of users"><a *ngIf="filterCoordResults(c)" href="#" (click)="selectCoord(c.id)" [innerHTML]="c.name | highlight: searchCoordTerms"></a></div>
-                        </div>
-                        <div style="color:red">
-                            <div *ngIf="!authority.coordId && (searchCoordTerms1.touched || searchCoordTerms1.dirty) "><small>Required</small></div>
-                        </div>
-                        <br><a href="mailto:{{user?.email}}"><i class="fa fa-envelope">&nbsp;</i>{{user?.email}}</a>
-                        <br><i class="fa fa-phone"></i>&nbsp;{{user?.phone}} 
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col-md-9">
                         <div class="form-group">

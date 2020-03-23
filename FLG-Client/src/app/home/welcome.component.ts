@@ -15,7 +15,7 @@ export class WelcomeComponent {
     this.meta.removeTag("name='keywords'");
     this.meta.removeTag("name='description'");
     this.title.setTitle(`NC Finish Line Grants`);    
- //   this.dataService.getAllStudents().subscribe(data=>{
+ //   this.dataService.getAll('student').subscribe(data=>{
  //     console.log(data);
 //    });
   }

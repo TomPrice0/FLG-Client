@@ -33,7 +33,7 @@ export class ResourceListComponent implements OnInit {
   ngOnInit() {
     this.lh.list='resources';
     this.lh.default='title';
-    this.dataService.getAllResources().subscribe((data: any)=>{
+    this.dataService.getAll('resource').subscribe((data: any)=>{
         console.log(data);
         this.resources = data;
         this.lh.array=this.resources;
@@ -49,7 +49,7 @@ export class ResourceListComponent implements OnInit {
   }
 
   composeEmail(id: number) {
-    this.dataService.getResource(id).subscribe((data: Resource)=>{
+    this.dataService.getEntity('resource',id).subscribe((data: Resource)=>{
       window.open("mailto:?subject=Requested licensing information&body="+data.resource);
     });
   }

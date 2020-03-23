@@ -13,6 +13,7 @@ import { PageNotFoundComponent } from './page-not-found.component';
 import { UserModule } from './users/user.module';
 import { StudentModule } from './students/student.module';
 import { BoardModule } from './boards/board.module';
+import { CollegeModule } from './colleges/college.module';
 import { ResourceModule } from './resources/resource.module';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -20,8 +21,8 @@ import { TokenInterceptor } from './users/auth.interceptor';
 import { SharedModule } from './shared/shared.module';
 import { VendorEditComponent } from './vendors/vendor-edit/vendor-edit.component';
 import { VendorListComponent } from './vendors/vendor-list/vendor-list.component';
-import { CollegeListComponent } from './colleges/college-list/college-list.component';
-import { CollegeEditComponent } from './colleges/college-edit/college-edit.component';
+// import { CollegeListComponent } from './colleges/college-list/college-list.component';
+// import { CollegeEditComponent } from './colleges/college-edit/college-edit.component';
 
 @NgModule({
   imports: [
@@ -42,8 +43,8 @@ import { CollegeEditComponent } from './colleges/college-edit/college-edit.compo
     PageNotFoundComponent,
     VendorEditComponent,
     VendorListComponent,
-    CollegeListComponent,
-    CollegeEditComponent,
+//    CollegeListComponent,
+//    CollegeEditComponent,
 //   FooterComponent, 
   ],
   bootstrap: [AppComponent],

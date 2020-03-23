@@ -65,7 +65,7 @@ export class StudentListComponent implements OnInit {
       this.lh.setOrder(this.auth.isLoggedIn?this.lh.listOrder:this.lh.default);
       this.boardId=this.route.snapshot.params['boardid'];  
       if (this.boardId){
-          this.dataService.getBoard(this.boardId).subscribe((data: Board)=>{ 
+          this.dataService.getEntity('board',this.boardId).subscribe((data: Board)=>{ 
           this.authName=data.department+(!data.division ||data.division===''?'':'/'+data.division)+(!data.board || data.board===''?'':'/'+data.board);  
         });
       }

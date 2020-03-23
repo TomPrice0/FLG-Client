@@ -71,7 +71,7 @@ export class ResourceEditComponent implements OnInit {
   }
 
   getResource(id){
-   this.dataService.getResource(id).subscribe((data: Resource)=>{
+   this.dataService.getEntity('resource',id).subscribe((data: Resource)=>{
       //       console.log(data);      
       this.resource = data;
       if (!this.resource)

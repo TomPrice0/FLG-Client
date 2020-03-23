@@ -5,7 +5,9 @@ import { catchError, publishReplay, refCount, map } from 'rxjs/operators';
 import { Student } from './students/student';
 import { User } from './users/user';
 import { Board } from './boards/board';
+import { College } from './colleges/college'
 import { Resource } from './resources/resource';
+import { Vendor } from './vendors/vendor';
 
 @Injectable({
   providedIn: 'root'
@@ -28,43 +30,67 @@ export class DataService {
     window.alert(errorMessage);
     return throwError(errorMessage);
   }
-
-  public getAllStudents(){
-    return this.httpClient.get(`${this.REST_API_SERVER}/student`).pipe(catchError(this.handleError));
+  
+  // Generic test
+  public getAll(entity: string){
+    return this.getCachedData(entity,this.REST_API_SERVER+'/'+entity).pipe(catchError(this.handleError));
   }
 
-  public getStudent(studentId: number){
-    return this.httpClient.get(this.REST_API_SERVER+'/student/'+studentId).pipe(catchError(this.handleError));
-  }
+  public getEntity(entity: string, id: number){
+    return this.httpClient.get(this.REST_API_SERVER+'/'+entity+'/'+id.toString()).pipe(catchError(this.handleError));
+  } 
 
-  public updateStudent(l: Student) {
-    this.cache['liclist']=null;   
-    return this.httpClient.post(this.REST_API_SERVER+'/student',l).pipe(catchError(this.handleError));
-  }
+  public deleteEntity(entity: string, id: number){
+    this.cache[entity]=null;
+    return this.httpClient.delete(this.REST_API_SERVER+'/'+entity+'/'+id.toString()).pipe(catchError(this.handleError));
+  } 
 
-  public getAllBoards(){
-    return this.getCachedData('authlist',this.REST_API_SERVER+'/board').pipe(catchError(this.handleError));
+  public updateEntity(entity: string, e: any){
+    return this.httpClient.post(this.REST_API_SERVER+'/'+entity+'/'+e.id.toString(),e).pipe(catchError(this.handleError));
+  } 
+  // End generic test
+
+  public xgetAllBoards(){
+    return this.getCachedData('board',this.REST_API_SERVER+'/board').pipe(catchError(this.handleError));
   }  
 
-  public getBoard(boardId: number){
+  public xgetBoard(boardId: number){
     return this.httpClient.get(this.REST_API_SERVER+'/board/'+boardId.toString()).pipe(catchError(this.handleError));
   } 
 
-  public deleteBoard(boardId: number){
+  public xdeleteBoard(boardId: number){
     this.cache['board']=null;
     return this.httpClient.delete(this.REST_API_SERVER+'/board/'+boardId.toString()).pipe(catchError(this.handleError));
   } 
 
-  public updateBoard(a: Board){
+  public xupdateBoard(b: Board){
     this.cache['board']=null;
-    return this.httpClient.post(this.REST_API_SERVER+'/board/',a).pipe(catchError(this.handleError));
+    return this.httpClient.post(this.REST_API_SERVER+'/board/',b).pipe(catchError(this.handleError));
   }
 
-  public getAllResources(){
+  public xgetAllColleges(){
+    return this.getCachedData('college',this.REST_API_SERVER+'/college').pipe(catchError(this.handleError));
+  }  
+
+  public xgetCollege(collegeId: number){
+    return this.httpClient.get(this.REST_API_SERVER+'/college/'+collegeId.toString()).pipe(catchError(this.handleError));
+  } 
+
+  public deleteCollege(collegeId: number){
+    this.cache['college']=null;
+    return this.httpClient.delete(this.REST_API_SERVER+'/college/'+collegeId.toString()).pipe(catchError(this.handleError));
+  } 
+
+  public xupdateCollege(c: College){
+    this.cache['college']=null;
+    return this.httpClient.post(this.REST_API_SERVER+'/college/',c).pipe(catchError(this.handleError));
+  }  
+ 
+  public xgetAllResources(){
     return this.getCachedData('reslist',`${this.REST_API_SERVER}/resource`).pipe(catchError(this.handleError));
   }
 
-  public getResource(id: number){
+  public xetResource(id: number){
     return this.httpClient.get(this.REST_API_SERVER+'/resource/'+id).pipe(catchError(this.handleError));
   }
 
@@ -76,6 +102,37 @@ export class DataService {
   public deleteResource(id: number) {
     this.cache['reslist']=null;   
     return this.httpClient.delete(this.REST_API_SERVER+'/resource/'+id).pipe(catchError(this.handleError));
+  }
+
+  public getAllStudents(){
+    return this.httpClient.get(`${this.REST_API_SERVER}/student`).pipe(catchError(this.handleError));
+  }
+
+  public getStudent(studentId: number){
+    return this.httpClient.get(this.REST_API_SERVER+'/student/'+studentId).pipe(catchError(this.handleError));
+  }
+
+  public updateStudent(s: Student) {
+    this.cache['liclist']=null;   
+    return this.httpClient.post(this.REST_API_SERVER+'/student',s).pipe(catchError(this.handleError));
+  }
+
+  public getAllVendors(){
+    return this.getCachedData('authlist',this.REST_API_SERVER+'/college').pipe(catchError(this.handleError));
+  }  
+
+  public getVendor(vendorId: number){
+    return this.httpClient.get(this.REST_API_SERVER+'/vendor/'+vendorId.toString()).pipe(catchError(this.handleError));
+  } 
+
+  public deleteVendor(vendorId: number){
+    this.cache['vendor']=null;
+    return this.httpClient.delete(this.REST_API_SERVER+'/college/'+vendorId.toString()).pipe(catchError(this.handleError));
+  } 
+
+  public updateVendor(v: Vendor){
+    this.cache['vendor']=null;
+    return this.httpClient.post(this.REST_API_SERVER+'/vendor/',v).pipe(catchError(this.handleError));
   }
 
   public getSoccodes(){

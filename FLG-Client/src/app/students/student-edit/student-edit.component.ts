@@ -106,7 +106,7 @@ export class StudentEditComponent implements OnInit{
   
   getStudent(id:number)
   {    
-    this.dataService.getAllBoards().subscribe(data=>{
+    this.dataService.getAll('board').subscribe(data=>{
       this.boards=data;
       this.boards.forEach(a=>a.name=a.department+(a.division!==''?'/':'')+a.division+(a.board!==''?'/':'')+a.board);
  //     console.log(this.boards);

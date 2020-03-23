@@ -32,7 +32,7 @@ export class UserListComponent implements OnInit {
   ngOnInit() {
     this.lh.list='user';
     this.lh.default='name';
-    this.dataService.getAllUsers().subscribe((data: any)=>{
+    this.dataService.getAll('user').subscribe((data: any)=>{
 //        console.log(data);
         this.users = data;
         this.lh.array=this.users;
